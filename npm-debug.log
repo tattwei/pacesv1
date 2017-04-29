@@ -7,8 +7,8 @@
 6 silly lifecycle simpledbserver@1.0.0~prestart: no script for prestart, continuing
 7 info lifecycle simpledbserver@1.0.0~start: simpledbserver@1.0.0
 8 verbose lifecycle simpledbserver@1.0.0~start: unsafe-perm in lifecycle true
-9 verbose lifecycle simpledbserver@1.0.0~start: PATH: /usr/lib/node_modules/npm/bin/node-gyp-bin:/home/cms/eric/pacesv0/node_modules/.bin:/home/cms/bin:/home/cms/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
-10 verbose lifecycle simpledbserver@1.0.0~start: CWD: /home/cms/eric/pacesv0
+9 verbose lifecycle simpledbserver@1.0.0~start: PATH: /usr/lib/node_modules/npm/bin/node-gyp-bin:/home/cms/eric/pacesv1/node_modules/.bin:/home/cms/bin:/home/cms/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+10 verbose lifecycle simpledbserver@1.0.0~start: CWD: /home/cms/eric/pacesv1
 11 silly lifecycle simpledbserver@1.0.0~start: Args: [ '-c', 'node --use_strict server/server.js' ]
 12 silly lifecycle simpledbserver@1.0.0~start: Returned: code: 1  signal: null
 13 info lifecycle simpledbserver@1.0.0~start: Failed to exec start script
@@ -23,7 +23,7 @@
 14 verbose stack     at maybeClose (internal/child_process.js:899:16)
 14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:226:5)
 15 verbose pkgid simpledbserver@1.0.0
-16 verbose cwd /home/cms/eric/pacesv0
+16 verbose cwd /home/cms/eric/pacesv1
 17 error Linux 4.8.0-41-generic
 18 error argv "/usr/bin/nodejs" "/usr/bin/npm" "start"
 19 error node v7.7.4
