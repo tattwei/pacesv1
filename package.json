@@ -4,6 +4,7 @@
   "description": "example mongodb server plus react frontend",
   "main": "server/server.js",
   "dependencies": {
+    "babel-polyfill": "^6.23.0",
     "body-parser": "^1.17.1",
     "connect-mongo": "^1.3.2",
     "cookie-parser": "^1.4.3",
@@ -25,7 +26,11 @@
     "react": "^15.4.2",
     "react-bootstrap": "^0.30.8",
     "react-dom": "^15.4.2",
+    "react-redux": "^5.0.4",
     "react-router-dom": "^4.1.1",
+    "redux": "^3.6.0",
+    "redux-logger": "^3.0.1",
+    "redux-thunk": "^2.2.0",
     "sanitize-html": "^1.14.1"
   },
   "devDependencies": {

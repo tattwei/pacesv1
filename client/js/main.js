@@ -1,6 +1,10 @@
+import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {BrowserRouter as Router,  Route, Link} from 'react-router-dom'
+import {createStore} from 'redux'
+import {Provider} from 'react-redux'
+import reducerApp from './reducers/index'
 import App from './components/App'
 import ChatSubscriber from './components/Clientvid'
 import ImagesList from './components/images/ImageList'
@@ -22,5 +26,13 @@ const BasicExample = ()=>(
     </div>
   </Router>
 )
+
+//let store = createStore(reducerApp)
+
+//const ReduxBasic=()=>(
+//    <Provider store={store}>
+//        <App />
+//    </Provider>
+//)
 
 ReactDOM.render(<App /> ,appId)
