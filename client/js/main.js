@@ -23,4 +23,4 @@ const BasicExample = ()=>(
   </Router>
 )
 
-ReactDOM.render(<BasicExample /> ,appId)
+ReactDOM.render(<App /> ,appId)

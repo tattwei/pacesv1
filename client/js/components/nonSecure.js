@@ -9,8 +9,10 @@ function NonSecureComp() {
   return(
     <Jumbotron>
     <h1><center>PACES Portal </center></h1>
-    <p><center>This is the informational section (non-secure) for the Malaysia Telemedicine Project</center></p>
-    <p><center><Button bsStyle="primary">Learn more</Button></center></p>
+    <center>
+    <p>This is the informational section (non-secure) for the Malaysia Telemedicine Projt</p>
+    <p><Button bsStyle="primary">Learn more</Button></p>
+    </center>
     </Jumbotron>
   );
 }

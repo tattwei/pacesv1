@@ -2,63 +2,53 @@
 
 import 'stylesheets/base.sass'
 import React, {Component} from 'react'
-import {FormGroup, ControlLabel, FormControl, ListGroup, ListGroupItem, Clearfix, Grid, Row, Col, Panel, Button } from 'react-bootstrap'
-
-const title = (<h1> Patient Record </h1>);
-
-function alertClicked(){
-  alert("Clicked!")
-}
-
-function SecureComp() {      
-  return ( 
-    <Grid>
-      <Row className="show-grid">
-      <Col xs={18} xsOffset={0}>
-      <p></p>
-      <Panel header={title} bsStyle="primary"> 
-          <p></p>
-          <FormGroup controlId="formControlsTextarea">
-            <ControlLabel>Record 1</ControlLabel>
-            <FormControl componentClass="textarea" placeholder="textarea" />
-          </FormGroup>
-          
-          <FormGroup controlId="formControlsTextarea">
-            <ControlLabel>Record 2</ControlLabel>
-            <FormControl componentClass="textarea" placeholder="textarea" />
-          </FormGroup>
-          
-          <FormGroup controlId="formControlsTextarea">
-            <ControlLabel>Record 3</ControlLabel>
-            <FormControl componentClass="textarea" placeholder="textarea" />
-          </FormGroup>
-          
-          <ListGroup fill>
-          <ListGroupItem onClick={alertClicked}><h5>Record A</h5> Record A value a reaaaaaalllllllllly long list of words</ListGroupItem>
-          <ListGroupItem>&hellip;</ListGroupItem>
-          </ListGroup>
-    </Panel>
-    </Col>
-      
-    <Clearfix visibleSmBlock><code>&lt;{'Clearfix visibleSmBlock'} /&gt;</code></Clearfix>  
-    <p><Button bsStyle="primary">Submit</Button></p>
-    </Row>
-    </Grid>      
-  );
-}
-
+import PropTypes from 'prop-types'
+import SecureView from './SecureView'
 
 class Secure extends Component{
+  constructor(props){
+    super(props);
+
+    this.state = {subjectid:this.props.subjectid, records: this.props.records};
+    this.updateRecords = this.updateRecords.bind(this);
+  }
+
+  updateRecords(event){
+      const target = event.target;
+      const name = target.name;
+      const value = target.type=='checkbox'? target.checked:target.value;
+
+      this.setState({
+        [name]:value
+      });
+  }
+
+  componentDidMount(){
+  }
+
+  componentWillUnmount(){
+  }
+  
   render(){
     return (
       <div>
         <div className="secure-body">
-          <SecureComp />
+          <SecureView onRecordChange = {this.updateRecords}/>
         </div>
       </div>
     )
   }
-}
+};
+
+Secure.defaultProps={
+    subjectid: "1500",
+    records: "empty"
+};
+
+Secure.propTypes ={
+    subjectid: PropTypes.string,
+    records: PropTypes.string
+};
 
 export default Secure
 
