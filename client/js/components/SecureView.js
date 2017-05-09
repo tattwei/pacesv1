@@ -11,16 +11,15 @@ class SecureView extends Component{
 
   constructor(props){
      super(props);
-     this.state= {records : "Beginning"};
+     this.state= {records : "Beginning", title: "FAILED"};
      this.onTextChange = this.onTextChange.bind(this);
      this.getTitle = this.getTitle.bind(this);
-  };
+  }
   
-
   getTitle(){
     return(
       <h1>{this.props.title}</h1>
-    )
+    );
   }
   onTextChange(event){
     const target = event.target
@@ -28,21 +27,17 @@ class SecureView extends Component{
     const value = target.type=='checkbox'? target.checked: target.value 
 
     this.setState({[name]:value})
-  };
-
-  componentDidMount(){
-  };
-
-  componentWillUnmount(){
-  };
+  }
 
   render(){
+
+    const mytitle = this.getTitle()
     return ( 
     <Grid>
       <Row className="show-grid">
       <Col xs={18} xsOffset={0}>
       <p></p>
-      <Panel header={getTitle} bsStyle="primary"> 
+      <Panel header={mytitle} bsStyle="primary"> 
           <p></p>
           <FormGroup controlId="formControlsTextarea">
             <ControlLabel>Records</ControlLabel>

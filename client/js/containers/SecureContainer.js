@@ -4,35 +4,40 @@
 
 import {React, Component} from 'react'
 import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
 import {LoadFmStore, SaveToStore} from  '../actions'   // import Action
 import SecureView from '../components/SecureView' // Import Presentational Component
  
 function mapStateToProps(state){
     
-    return{
+    console.log(state)
+
+    return(
         // call a reducer here to fetch state
-        title: state.title
-    }
+	{title: state.title}
+    );
 }
 
+//class SecureContainer extends Component(){
+//  constructor(props){
+//    super(props);
+//  }
 
-class SecureContainer extends Component(){
-  constructor(props){
-    super(props);
-  }
+//  render(){
+//    return(
+//      <div>
+//        <SecureView title=(this.props.title} />
+//      </div>
+//    )
+//  }
+//} 
 
-  render(){
-    const {title} = this.props;
-    return(
-      <div>
-        <SecureView title={title} />
-      </div>
-    )
-  }
-} 
+
+const SecureContainer = connect(mapStateToProps)(SecureView)
 
 SecureContainer.propTypes={
-    title: PropTypes.string.isRequired
+    title: PropTypes.string
 }
 
-export default connect(mapStateToProps)(SecureView)
+
+export default SecureContainer
