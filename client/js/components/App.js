@@ -8,6 +8,7 @@ import ChatPublisher from './Doctorvid'
 import ChatSubscriber from './Clientvid'
 import NonSecure from './nonSecure'
 import Secure from './Secure'	
+import SecureContainer from '../containers/SecureContainer' 
 
 const title = (<h3>Patient record</h3>);
 
@@ -20,12 +21,13 @@ class App extends Component{
          <NonSecure />
         </div>
         <div className="mid">
-         <Secure />
+         <SecureContainer />
         </div>
       </div>
     )
   }
 }
+
 
 export default App
 

@@ -1,39 +1,33 @@
-const REQUEST_GETTX = 'REQUEST_GETTX'
-const RECEIVE_GETTX = 'RECEIVE_GETTX'
 
 function gets(state={}, action){
 
 	switch(action.type){
 	
-		case REQUEST_GETTX:
+		case LOADFMSTORE:
 			return Object.assign({}, state,{
-				isFetching: true,
-				subjectid: action.subjectid
+				records: "Loaded"  // later to find out how to do other stuff here
 			})
 		
-		case RECEIVE_GETTX:
+		case SAVETOSTORE:
 			return Object.assign({}, state, {
-				isFetching: false, 
-				subjectid: action.subjectid,
-				records: action.gets, 
-				lastUpdated: action.receivedAt
+				records: action.records
 			})
 		default: return state
 	}
 }
 
 
-function getsApp(state={}, action) {
+function dbreq(state={}, action) {
 	switch(action.type){
-		case REQUEST_GETTX:
-		case RECEIVE_GETTX:
+		case LOADFMSTORE:
+		case SAVETOSTORE:
 			return Object.assign({}, state,{
-				transactions: gets(state.transaction, action )
+				transaction: dbreq(state.records, action )
 			})
 		default: return state
 			
 	}
 }
 
-export default getsApp
+export default gets
 

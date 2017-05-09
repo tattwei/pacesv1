@@ -5,21 +5,35 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {FormGroup, ControlLabel, FormControl, ListGroup, ListGroupItem, Clearfix, Grid, Row, Col, Panel, Button } from 'react-bootstrap'
 
-const title = (<h1> Patient Record </h1>);
-
-function alertClicked(){
-  alert("Clicked!")
-};
+//const title = (<h1> Patient Record </h1>);
 
 class SecureView extends Component{      
 
   constructor(props){
      super(props);
+     this.state= {records : "Beginning"};
      this.onTextChange = this.onTextChange.bind(this);
+     this.getTitle = this.getTitle.bind(this);
+  };
+  
+
+  getTitle(){
+    return(
+      <h1>{this.props.title}</h1>
+    )
+  }
+  onTextChange(event){
+    const target = event.target
+    const name = target.name
+    const value = target.type=='checkbox'? target.checked: target.value 
+
+    this.setState({[name]:value})
   };
 
-  onTextChange(event){
-    this.props.onRecordChange(event);
+  componentDidMount(){
+  };
+
+  componentWillUnmount(){
   };
 
   render(){
@@ -28,37 +42,27 @@ class SecureView extends Component{
       <Row className="show-grid">
       <Col xs={18} xsOffset={0}>
       <p></p>
-      <Panel header={title} bsStyle="primary"> 
+      <Panel header={getTitle} bsStyle="primary"> 
           <p></p>
           <FormGroup controlId="formControlsTextarea">
-            <ControlLabel>Record 1</ControlLabel>
-            <FormControl componentClass="textarea" placeholder="textarea" name = "records" onChange={this.onTextChange} />
+            <ControlLabel>Records</ControlLabel>
+            <FormControl componentClass="textarea" placeholder={this.state.records} name = "records" onChange={this.onTextChange} />
           </FormGroup>
           
-          <FormGroup controlId="formControlsTextarea">
-            <ControlLabel>Record 2</ControlLabel>
-            <FormControl componentClass="textarea" placeholder="textarea" />
-          </FormGroup>
-          
-          <FormGroup controlId="formControlsTextarea">
-            <ControlLabel>Record 3</ControlLabel>
-            <FormControl componentClass="textarea" placeholder="textarea" />
-          </FormGroup>
-          
-          <ListGroup fill>
-          <ListGroupItem onClick={alertClicked}><h5>Record A</h5> Record A value a reaaaaaalllllllllly long list of words</ListGroupItem>
-          <ListGroupItem>&hellip;</ListGroupItem>
-          </ListGroup>
     </Panel>
     </Col>
       
-    <Clearfix visibleSmBlock><code>&lt;{'Clearfix visibleSmBlock'} /&gt;</code></Clearfix>  
-    <p><Button bsStyle="primary">Submit</Button></p>
+    <p><Button bsStyle="primary">Save To</Button></p>
+    <p><Button bsStyle="primary" >Load Fm</Button></p>
     </Row>
     </Grid>      
   );
   }
 };
+
+SecureView.propTypes={
+    title: PropTypes.string
+}
 
 export default SecureView
 
