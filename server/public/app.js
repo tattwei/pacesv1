@@ -21625,12 +21625,27 @@ function mapStateToProps(state) {
 
     console.log(state);
 
-    return (
-        // call a reducer here to fetch state
-        { title: state.title }
-    );
-}
+    return {
+        title: state.title,
+        records: state.records
+    };
+} // import Action
+// client/js/containers/SecureContainer.js
 
+// Container Component to fetch record
+
+function mapDispatchToProps(dispatch) {
+
+    return {
+        onLoad: function onLoad(state) {
+            dispatch((0, _actions.LOADFMSTORE)());
+        },
+        onSave: function onSave(state) {
+            dispatch((0, _actions.SAVETOSTORE)(state.records));
+        }
+
+    };
+}
 //class SecureContainer extends Component(){
 //  constructor(props){
 //    super(props);
@@ -21646,16 +21661,9 @@ function mapStateToProps(state) {
 //} 
 
 
-// import Action
-// client/js/containers/SecureContainer.js
+var SecureContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_SecureView2.default);
 
-// Container Component to fetch record
-
-var SecureContainer = (0, _reactRedux.connect)(mapStateToProps)(_SecureView2.default);
-
-SecureContainer.propTypes = {
-    title: _propTypes2.default.string
-};
+SecureContainer.propTypes = {};
 
 exports.default = SecureContainer;
 
@@ -21667,32 +21675,28 @@ exports.default = SecureContainer;
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+    value: true
 });
 exports.dbReq = dbReq;
 function dbReq() {
-	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-	var action = arguments[1];
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var action = arguments[1];
 
 
-	switch (action.type) {
+    switch (action.type) {
 
-		case 'ADDTITLE':
-			return Object.assign({}, state, {
-				title: action.title
-			});
-		case 'LOADFMSTORE':
-			return Object.assign({}, state, {
-				records: "Loaded" // later to find out how to do other stuff here
-			});
-
-		case 'SAVETOSTORE':
-			return Object.assign({}, state, {
-				records: action.records
-			});
-		default:
-			return state;
-	}
+        case 'ADDTITLE':
+            return Object.assign({}, state, {
+                title: action.title
+            });
+        case 'SAVETOSTORE':
+            return Object.assign({}, state, {
+                records: action.records
+            });
+        case 'LOADFMSTORE':
+        default:
+            return state;
+    }
 }
 
 /***/ }),
@@ -21834,9 +21838,11 @@ var SecureView = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (SecureView.__proto__ || Object.getPrototypeOf(SecureView)).call(this, props));
 
-    _this.state = { records: "Beginning", title: "FAILED" };
+    _this.state = { records: "Random GUI state" };
     _this.onTextChange = _this.onTextChange.bind(_this);
     _this.getTitle = _this.getTitle.bind(_this);
+    _this.onLoadClick = _this.onLoadClick.bind(_this);
+    _this.onSaveClick = _this.onSaveClick.bind(_this);
     return _this;
   }
 
@@ -21849,6 +21855,9 @@ var SecureView = function (_Component) {
         this.props.title
       );
     }
+
+    // Always keep local state in synch with the store
+
   }, {
     key: 'onTextChange',
     value: function onTextChange(event) {
@@ -21857,6 +21866,18 @@ var SecureView = function (_Component) {
       var value = target.type == 'checkbox' ? target.checked : target.value;
 
       this.setState(_defineProperty({}, name, value));
+      this.props.onSave(this.state);
+    }
+  }, {
+    key: 'onSaveClick',
+    value: function onSaveClick(event) {
+      this.props.onSave(this.state);
+    }
+  }, {
+    key: 'onLoadClick',
+    value: function onLoadClick(event) {
+      this.props.onLoad(this.state);
+      this.setState({ records: this.props.records });
     }
   }, {
     key: 'render',
@@ -21885,7 +21906,7 @@ var SecureView = function (_Component) {
                   null,
                   'Records'
                 ),
-                _react2.default.createElement(_reactBootstrap.FormControl, { componentClass: 'textarea', placeholder: this.state.records, name: 'records', onChange: this.onTextChange })
+                _react2.default.createElement(_reactBootstrap.FormControl, { componentClass: 'textarea', placeholder: this.props.records, name: 'records', onChange: this.onTextChange })
               )
             )
           ),
@@ -21894,7 +21915,7 @@ var SecureView = function (_Component) {
             null,
             _react2.default.createElement(
               _reactBootstrap.Button,
-              { bsStyle: 'primary' },
+              { bsStyle: 'primary', onClick: this.onSaveClick },
               'Save To'
             )
           ),
@@ -21903,7 +21924,7 @@ var SecureView = function (_Component) {
             null,
             _react2.default.createElement(
               _reactBootstrap.Button,
-              { bsStyle: 'primary' },
+              { bsStyle: 'primary', onClick: this.onLoadClick },
               'Load Fm'
             )
           )
@@ -21918,7 +21939,10 @@ var SecureView = function (_Component) {
 ;
 
 SecureView.propTypes = {
-  title: _propTypes2.default.string
+  title: _propTypes2.default.string.isRequired,
+  records: _propTypes2.default.string,
+  onLoad: _propTypes2.default.func.isRequired,
+  onSave: _propTypes2.default.func.isRequired
 };
 
 exports.default = SecureView;
@@ -21976,7 +22000,8 @@ var unsubscribe = store.subscribe(function () {
     return console.log(store.getState());
 });
 console.log(store.getState());
-store.dispatch((0, _actions.ADDTITLE)('InitialTitle'));
+store.dispatch((0, _actions.ADDTITLE)('Patient Record (Store Connected)'));
+store.dispatch((0, _actions.SAVETOSTORE)('Initial Store Record'));
 
 var ReduxBasic = function ReduxBasic() {
     return _react2.default.createElement(

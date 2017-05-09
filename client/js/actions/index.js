@@ -24,6 +24,7 @@ export function LOADFMSTORE(){
 }
 
 
+
 // Thunk action creator - returns functions rather than objects
 // store.dispatch(fecthPosts('reactjs'))
 

@@ -11,9 +11,11 @@ class SecureView extends Component{
 
   constructor(props){
      super(props);
-     this.state= {records : "Beginning", title: "FAILED"};
+     this.state= {records : "Random GUI state"};
      this.onTextChange = this.onTextChange.bind(this);
      this.getTitle = this.getTitle.bind(this);
+     this.onLoadClick = this.onLoadClick.bind(this);
+     this.onSaveClick = this.onSaveClick.bind(this);
   }
   
   getTitle(){
@@ -21,12 +23,24 @@ class SecureView extends Component{
       <h1>{this.props.title}</h1>
     );
   }
+
+  // Always keep local state in synch with the store
   onTextChange(event){
     const target = event.target
     const name = target.name
     const value = target.type=='checkbox'? target.checked: target.value 
 
     this.setState({[name]:value})
+    this.props.onSave(this.state)
+  }
+
+  onSaveClick(event){
+    this.props.onSave(this.state)
+  }
+
+  onLoadClick(event){
+      this.props.onLoad(this.state)
+      this.setState({ records: this.props.records})
   }
 
   render(){
@@ -41,14 +55,14 @@ class SecureView extends Component{
           <p></p>
           <FormGroup controlId="formControlsTextarea">
             <ControlLabel>Records</ControlLabel>
-            <FormControl componentClass="textarea" placeholder={this.state.records} name = "records" onChange={this.onTextChange} />
+            <FormControl componentClass="textarea" placeholder={this.props.records} name = "records" onChange={this.onTextChange} />
           </FormGroup>
           
     </Panel>
     </Col>
       
-    <p><Button bsStyle="primary">Save To</Button></p>
-    <p><Button bsStyle="primary" >Load Fm</Button></p>
+    <p><Button bsStyle="primary" onClick={this.onSaveClick}>Save To</Button></p>
+    <p><Button bsStyle="primary" onClick={this.onLoadClick}>Load Fm</Button></p>
     </Row>
     </Grid>      
   );
@@ -56,7 +70,10 @@ class SecureView extends Component{
 };
 
 SecureView.propTypes={
-    title: PropTypes.string
+    title: PropTypes.string.isRequired,
+    records: PropTypes.string,
+    onLoad: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired
 }
 
 export default SecureView

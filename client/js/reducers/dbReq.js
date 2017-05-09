@@ -7,15 +7,11 @@ export function dbReq(state={}, action){
             return Object.assign({}, state, {
 		title: action.title
             })
-	case 'LOADFMSTORE':
-	    return Object.assign({}, state,{
-		records: "Loaded"  // later to find out how to do other stuff here
-	    })
-		
-	case 'SAVETOSTORE':
-	    return Object.assign({}, state, {
-		records: action.records
-	    })
+        case 'SAVETOSTORE':
+            return Object.assign({}, state, {
+                records: action.records
+            })
+        case 'LOADFMSTORE':
         default: return state
     }
 }

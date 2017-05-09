@@ -10,7 +10,7 @@ import {Provider} from 'react-redux'
 import SecureContainer from './containers/SecureContainer'
 
 import {dbReq} from './reducers/dbReq'
-import {ADDTITLE} from './actions'
+import {ADDTITLE, SAVETOSTORE} from './actions'
 
 const appId = document.getElementById("app")
 
@@ -26,7 +26,8 @@ let store = createStore(dbReq)
 
 let unsubscribe = store.subscribe(()=> console.log(store.getState()))
 console.log(store.getState())
-store.dispatch(ADDTITLE('InitialTitle'))
+store.dispatch(ADDTITLE('Patient Record (Store Connected)'))
+store.dispatch(SAVETOSTORE('Initial Store Record'))
 
 const ReduxBasic=()=>(
     <Provider store={store}>

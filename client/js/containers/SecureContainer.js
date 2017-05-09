@@ -5,19 +5,31 @@
 import {React, Component} from 'react'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
-import {LoadFmStore, SaveToStore} from  '../actions'   // import Action
+import {LOADFMSTORE, SAVETOSTORE} from  '../actions'   // import Action
 import SecureView from '../components/SecureView' // Import Presentational Component
  
 function mapStateToProps(state){
     
     console.log(state)
 
-    return(
-        // call a reducer here to fetch state
-	{title: state.title}
-    );
+    return({
+        title: state.title,
+        records: state.records
+    });
 }
 
+function mapDispatchToProps(dispatch){
+    
+    return({
+        onLoad: (state)=>{ 
+             dispatch(LOADFMSTORE())
+        },
+        onSave: (state)=>{
+             dispatch(SAVETOSTORE(state.records))
+        }
+     
+    })
+}
 //class SecureContainer extends Component(){
 //  constructor(props){
 //    super(props);
@@ -33,10 +45,9 @@ function mapStateToProps(state){
 //} 
 
 
-const SecureContainer = connect(mapStateToProps)(SecureView)
+const SecureContainer = connect(mapStateToProps, mapDispatchToProps)(SecureView)
 
 SecureContainer.propTypes={
-    title: PropTypes.string
 }
 
 
