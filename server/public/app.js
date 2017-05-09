@@ -21641,6 +21641,7 @@ function mapDispatchToProps(dispatch) {
             dispatch((0, _actions.LOADFMSTORE)());
         },
         onSave: function onSave(state) {
+            console.log(state);
             dispatch((0, _actions.SAVETOSTORE)(state.records));
         }
 
@@ -21838,7 +21839,7 @@ var SecureView = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (SecureView.__proto__ || Object.getPrototypeOf(SecureView)).call(this, props));
 
-    _this.state = { records: "Random GUI state" };
+    _this.state = { records: "Random GUI state", dorender: false };
     _this.onTextChange = _this.onTextChange.bind(_this);
     _this.getTitle = _this.getTitle.bind(_this);
     _this.onLoadClick = _this.onLoadClick.bind(_this);
@@ -21852,7 +21853,7 @@ var SecureView = function (_Component) {
       return _react2.default.createElement(
         'h1',
         null,
-        this.props.title
+        this.props.records
       );
     }
 
@@ -21865,8 +21866,9 @@ var SecureView = function (_Component) {
       var name = target.name;
       var value = target.type == 'checkbox' ? target.checked : target.value;
 
-      this.setState(_defineProperty({}, name, value));
-      this.props.onSave(this.state);
+      this.setState(function (previousState, props) {
+        return _defineProperty({}, name, value);
+      });
     }
   }, {
     key: 'onSaveClick',
@@ -21877,7 +21879,16 @@ var SecureView = function (_Component) {
     key: 'onLoadClick',
     value: function onLoadClick(event) {
       this.props.onLoad(this.state);
-      this.setState({ records: this.props.records });
+      this.setState({ records: this.props.records, dorender: true });
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      //console.log('SecureView: ',this.state, this.props)
+      //console.log('Secureview next: ', nextState, nextProps)
+
+      this.props.onSave(nextState); // perfectly sync this.state with store state
+      return nextState.dorender;
     }
   }, {
     key: 'render',
@@ -21906,7 +21917,7 @@ var SecureView = function (_Component) {
                   null,
                   'Records'
                 ),
-                _react2.default.createElement(_reactBootstrap.FormControl, { componentClass: 'textarea', placeholder: this.props.records, name: 'records', onChange: this.onTextChange })
+                _react2.default.createElement(_reactBootstrap.FormControl, { componentClass: 'textarea', placeholder: this.state.records, name: 'records', onChange: this.onTextChange })
               )
             )
           ),

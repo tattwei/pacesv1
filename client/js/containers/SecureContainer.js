@@ -25,6 +25,7 @@ function mapDispatchToProps(dispatch){
              dispatch(LOADFMSTORE())
         },
         onSave: (state)=>{
+             console.log(state)
              dispatch(SAVETOSTORE(state.records))
         }
      

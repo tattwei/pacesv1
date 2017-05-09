@@ -11,7 +11,7 @@ class SecureView extends Component{
 
   constructor(props){
      super(props);
-     this.state= {records : "Random GUI state"};
+     this.state= {records : "Random GUI state", dorender:false};
      this.onTextChange = this.onTextChange.bind(this);
      this.getTitle = this.getTitle.bind(this);
      this.onLoadClick = this.onLoadClick.bind(this);
@@ -20,7 +20,7 @@ class SecureView extends Component{
   
   getTitle(){
     return(
-      <h1>{this.props.title}</h1>
+      <h1>{this.props.records}</h1>
     );
   }
 
@@ -30,8 +30,7 @@ class SecureView extends Component{
     const name = target.name
     const value = target.type=='checkbox'? target.checked: target.value 
 
-    this.setState({[name]:value})
-    this.props.onSave(this.state)
+    this.setState((previousState, props)=>({[name]:value}))
   }
 
   onSaveClick(event){
@@ -40,7 +39,14 @@ class SecureView extends Component{
 
   onLoadClick(event){
       this.props.onLoad(this.state)
-      this.setState({ records: this.props.records})
+      this.setState({ records: this.props.records, dorender:true})
+  }
+  shouldComponentUpdate(nextProps, nextState){
+      //console.log('SecureView: ',this.state, this.props)
+      //console.log('Secureview next: ', nextState, nextProps)
+      
+      this.props.onSave(nextState);  // perfectly sync this.state with store state
+      return nextState.dorender;
   }
 
   render(){
@@ -55,7 +61,7 @@ class SecureView extends Component{
           <p></p>
           <FormGroup controlId="formControlsTextarea">
             <ControlLabel>Records</ControlLabel>
-            <FormControl componentClass="textarea" placeholder={this.props.records} name = "records" onChange={this.onTextChange} />
+            <FormControl componentClass="textarea" placeholder={this.state.records} name = "records" onChange={this.onTextChange} />
           </FormGroup>
           
     </Panel>

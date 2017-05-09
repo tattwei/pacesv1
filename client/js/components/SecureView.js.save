@@ -1,0 +1,68 @@
+// client/js/components/SecureView.js
+
+import 'stylesheets/base.sass'
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+import {FormGroup, ControlLabel, FormControl, ListGroup, ListGroupItem, Clearfix, Grid, Row, Col, Panel, Button } from 'react-bootstrap'
+
+class SecureView extends Component{      
+
+  constructor(props){
+     super(props);
+     this.state= {records : "Beginning" };
+     this.onTextChange = this.onTextChange.bind(this);
+  };
+  
+
+  getTitle(){
+    return(
+      <h1>{this.state.title}</h1>
+    )
+  }
+  onTextChange(event){
+    const target = event.target
+    const name = target.name
+    const value = target.type=='checkbox'? target.checked: target.value 
+
+    this.setState({[name]:value})
+    this.props.onSaveToStore(value)
+  };
+
+  componentDidMount(){
+  };
+
+  componentWillUnmount(){
+  };
+
+  render(){
+    return ( 
+    <Grid>
+      <Row className="show-grid">
+      <Col xs={18} xsOffset={0}>
+      <p></p>
+      <Panel header={getTitle} bsStyle="primary"> 
+          <p></p>
+          <FormGroup controlId="formControlsTextarea">
+            <ControlLabel>Records</ControlLabel>
+            <FormControl componentClass="textarea" placeholder={this.state.records} name = "records" onChange={this.onTextChange} />
+          </FormGroup>
+          
+    </Panel>
+    </Col>
+      
+    <p><Button bsStyle="primary">Save To</Button></p>
+    <p><Button bsStyle="primary" >Load Fm</Button></p>
+    </Row>
+    </Grid>      
+  );
+  }
+};
+
+SecureView.propTypes={
+    title: PropTypes.string,
+    records: PropTypes.string,
+    onSaveToStore: PropTypes.func.isRequired
+}
+
+export default SecureView
+
