@@ -5,7 +5,7 @@
 import {React, Component} from 'react'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
-import {LOADFMSTORE, SAVETOSTORE} from  '../actions'   // import Action
+import {LoadDB, LOADFMSTORE, SAVETOSTORE} from  '../actions'   // import Action
 import SecureView from '../components/SecureView' // Import Presentational Component
  
 function mapStateToProps(state){
@@ -21,12 +21,16 @@ function mapStateToProps(state){
 function mapDispatchToProps(dispatch){
     
     return({
-        onLoad: (state)=>{ 
+        onLoad: ()=>{ 
              dispatch(LOADFMSTORE())
         },
         onSave: (state)=>{
              console.log(state)
              dispatch(SAVETOSTORE(state.records))
+        },
+
+        onLoadDB: ()=>{
+             dispatch(LoadDB('1150'))
         }
      
     })
@@ -49,6 +53,7 @@ function mapDispatchToProps(dispatch){
 const SecureContainer = connect(mapStateToProps, mapDispatchToProps)(SecureView)
 
 SecureContainer.propTypes={
+    dispatch: PropTypes.func.isRequired
 }
 
 

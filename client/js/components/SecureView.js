@@ -11,43 +11,49 @@ class SecureView extends Component{
 
   constructor(props){
      super(props);
-     this.state= {records : "Random GUI state", dorender:false};
+     this.state= {records: '', dorender:false};  // records is a  dummy variable to clear the value so component is always displayed updated
      this.onTextChange = this.onTextChange.bind(this);
      this.getTitle = this.getTitle.bind(this);
-     this.onLoadClick = this.onLoadClick.bind(this);
+     this.onLoadDBClick = this.onLoadDBClick.bind(this);
      this.onSaveClick = this.onSaveClick.bind(this);
   }
   
   getTitle(){
     return(
-      <h1>{this.props.records}</h1>
+      <h1>{this.props.title}</h1>
     );
   }
 
-  // Always keep local state in synch with the store
   onTextChange(event){
     const target = event.target
     const name = target.name
     const value = target.type=='checkbox'? target.checked: target.value 
+    this.setState({[name]:value})
+  }
 
-    this.setState((previousState, props)=>({[name]:value}))
+  // Load from Store
+  onLoadClick(event){
+    this.props.onLoad()
+  }
+
+  // Load from Server DB
+  onLoadDBClick(event){
+      this.props.onLoadDB()
+      this.setState({records: "", dorender:true})
   }
 
   onSaveClick(event){
-    this.props.onSave(this.state)
+      this.props.onSave(this.state)
+      this.setState({records:"", dorender:true})
   }
 
-  onLoadClick(event){
-      this.props.onLoad(this.state)
-      this.setState({ records: this.props.records, dorender:true})
+  componentDidUpdate(prevProps, prevState){
+      console.log("Component RENDERED")
   }
-  shouldComponentUpdate(nextProps, nextState){
-      //console.log('SecureView: ',this.state, this.props)
-      //console.log('Secureview next: ', nextState, nextProps)
-      
-      this.props.onSave(nextState);  // perfectly sync this.state with store state
-      return nextState.dorender;
-  }
+
+  //shouldComponentUpdate(nextProps, nextState){
+      //return nextState.dorender;
+  //}
 
   render(){
 
@@ -60,26 +66,31 @@ class SecureView extends Component{
       <Panel header={mytitle} bsStyle="primary"> 
           <p></p>
           <FormGroup controlId="formControlsTextarea">
-            <ControlLabel>Records</ControlLabel>
-            <FormControl componentClass="textarea" placeholder={this.state.records} name = "records" onChange={this.onTextChange} />
+            <ControlLabel> Records </ControlLabel>
+            <FormControl componentClass="textarea" value={this.state.records} placeholder={this.props.records} name = "records" onChange={this.onTextChange} />
           </FormGroup>
           
     </Panel>
     </Col>
-      
-    <p><Button bsStyle="primary" onClick={this.onSaveClick}>Save To</Button></p>
-    <p><Button bsStyle="primary" onClick={this.onLoadClick}>Load Fm</Button></p>
+    <p><Button bsStyle="primary" onClick={this.onLoadDBClick}>Load Fm</Button>
+       <Button bsStyle="primary" onClick={this.onSaveClick} > Save Fm</Button>
+    </p>
+
     </Row>
     </Grid>      
   );
   }
 };
 
+
+
+
 SecureView.propTypes={
     title: PropTypes.string.isRequired,
     records: PropTypes.string,
     onLoad: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired
+    onSave: PropTypes.func.isRequired,
+    onLoadDB: PropTypes.func.isRequired
 }
 
 export default SecureView
