@@ -2,5 +2,6 @@
 
 module.exports = {
 	home: require('./home'),
-	db: require('./db')
+	db: require('./db'),
+	users: require('./users')
 }

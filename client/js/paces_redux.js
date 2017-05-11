@@ -2,37 +2,38 @@ import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {BrowserRouter as Router,  Route, Link} from 'react-router-dom'
-import {createStore} from 'redux'
 import {Provider} from 'react-redux'
-import reducerApp from './reducers/index'
-import App from './components/App'
-import ChatSubscriber from './components/Clientvid'
-import ImagesList from './components/images/ImageList'
+//import App from './components/App'
+//import ChatSubscriber from './components/Clientvid'
+//import ImagesList from './components/images/ImageList'
+import SecureContainer from './containers/SecureContainer'
+
+//import {configureStore} from './configureStore'
+import {createStore, applyMiddleware} from 'redux'
+import thunkMiddleware from 'redux-thunk'
+import {createLogger} from 'redux-logger'
+import {storeReq} from './reducers/Req'
+import {ADDTITLE, SAVETOSTORE, LoadDB} from './actions'
 
 const appId = document.getElementById("app")
 
-const BasicExample = ()=>(
-  <Router>
-    <div>
-      <ul>
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/client">Client</Link></li>
-      </ul>
+//let store = configureStore()
+//let store = createStore(storeReq)
+const loggerMiddleware = createLogger()
+const preloadedState = {title:"Patient Record (Store Connected)", records: "Initial Store Record"}
+let store = createStore(storeReq, preloadedState, applyMiddleware(thunkMiddleware, loggerMiddleware))
 
-      <hr />
 
-      <Route exact path="/" component={App}/>
-      <Route path="/client" component={App}/>
-    </div>
-  </Router>
+let unsubscribe = store.subscribe(()=> console.log(store.getState()))
+console.log(store.getState())
+store.dispatch(LoadDB('1150'))
+
+const ReduxBasic=()=>(
+    <Provider dispatch={store.dispatch} store={store}>
+        <SecureContainer />
+    </Provider>
 )
 
-//let store = createStore(reducerApp)
+ReactDOM.render(<ReduxBasic /> ,appId)
 
-//const ReduxBasic=()=>(
-//    <Provider store={store}>
-//        <App />
-//    </Provider>
-//)
-
-ReactDOM.render(<App /> ,appId)
+unsubscribe()

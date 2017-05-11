@@ -9,9 +9,9 @@ module.exports.initialize = function(app, router){
 
 	// ADD MY HTTP HANDLING METHODS HERE (POST, PUT, DELETE)
 	router.get('/', controllers.home.index)
-	router.get('/user/:subjectid', controllers.db.load)
-        router.post('/user/:subjectid', controllers.db.save)
-	//router.put('/user/:subjectid', controllers.db.save)
+	router.get('/user/:subjectid', controllers.db.auth, controllers.db.load)
+        router.post('/user/:subjectid', controllers.db.auth, controllers.db.save)
+        router.post('/authenticate', controllers.users.auth)
 	//router.get('/api/images', api.images.list)
 	
 	// MIDDLEWARE HANDLING

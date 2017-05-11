@@ -1,5 +1,6 @@
 module.exports = {
 	Image:	require('./image'),
-	Testdata: require('./testdata')
+	DBreq: require('./dbreq'),
+        Userauth: require('./user')
 }
 
