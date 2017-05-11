@@ -5,7 +5,15 @@ let Models = require('../models')
 module.exports={
     
    save(req,res){
-	res.send('<h1>SaveDB</h1>')
+        //var subjectid = req.body.subjectid
+        console.log('In SERVER', req.body);
+        //var mydoc = Models.Testdata (req.body);
+        //mydoc.save((err,result)=> {
+        //    res.json(result)
+        //});
+        Models.Testdata.create(req.body, (err,result)=>{
+             res.json(result)
+        })
    },
 
     load(req,res){

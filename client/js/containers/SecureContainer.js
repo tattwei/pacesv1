@@ -5,7 +5,7 @@
 import {React, Component} from 'react'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
-import {LoadDB, LOADFMSTORE, SAVETOSTORE} from  '../actions'   // import Action
+import {SaveDB, LoadDB, LOADFMSTORE, SAVETOSTORE} from  '../actions'   // import Action
 import SecureView from '../components/SecureView' // Import Presentational Component
  
 function mapStateToProps(state){
@@ -14,23 +14,28 @@ function mapStateToProps(state){
 
     return({
         title: state.title,
-        records: state.records
+        records: state.records,
+        subjectid: state.subjectid
     });
 }
 
 function mapDispatchToProps(dispatch){
     
     return({
-        onLoad: ()=>{ 
-             dispatch(LOADFMSTORE())
+        onLoad: (subjectid)=>{ 
+             dispatch(LOADFMSTORE(subjectid))
         },
         onSave: (state)=>{
              console.log(state)
-             dispatch(SAVETOSTORE(state.records))
+             dispatch(SAVETOSTORE(state))
         },
 
-        onLoadDB: ()=>{
-             dispatch(LoadDB('1150'))
+        onLoadDB: (subjectid)=>{
+             dispatch(LoadDB(subjectid))
+        },
+
+        onSaveDB: (transaction)=>{
+             dispatch(SaveDB(transaction))
         }
      
     })

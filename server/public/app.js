@@ -13338,6 +13338,10 @@ exports.LOADFMSTORE = LOADFMSTORE;
 exports.LOADFMDB_REQ = LOADFMDB_REQ;
 exports.LOADFMDB_SUCCESS = LOADFMDB_SUCCESS;
 exports.LOADFMDB_FAILURE = LOADFMDB_FAILURE;
+exports.SAVETODB_REQ = SAVETODB_REQ;
+exports.SAVETODB_SUCCESS = SAVETODB_SUCCESS;
+exports.SAVETODB_FAILURE = SAVETODB_FAILURE;
+exports.SaveDB = SaveDB;
 exports.LoadDB = LoadDB;
 
 var _isomorphicFetch = __webpack_require__(608);
@@ -13353,16 +13357,18 @@ function ADDTITLE(title) {
     };
 } // ACTION CREATORS
 
-function SAVETOSTORE(records) {
+function SAVETOSTORE(transaction) {
     return {
         type: 'SAVETOSTORE',
-        records: records
+        records: transaction.records,
+        subjectid: transaction.subjectid
     };
 }
 
-function LOADFMSTORE() {
+function LOADFMSTORE(subjectid) {
     return {
-        type: 'LOADFMSTORE'
+        type: 'LOADFMSTORE',
+        subjectid: subjectid
     };
 }
 
@@ -13390,8 +13396,44 @@ function LOADFMDB_FAILURE() {
     };
 }
 
+function SAVETODB_REQ(transaction) {
+    return {
+        type: 'SAVETODB_REQ',
+        records: transaction.records,
+        subjectid: transaction.subjectid
+    };
+}
+
+function SAVETODB_SUCCESS(subjectid, json) {
+    console.log("SAVE RESP", json);
+    return {
+        type: 'SAVETODB_SUCCESS',
+        subjectid: subjectid,
+        receivedAt: Date.now()
+    };
+}
+
+function SAVETODB_FAILURE() {}
+
 // Thunk action creator - returns functions rather than objects
 
+function SaveDB(transaction) {
+    var uri = 'https://182.54.217.24:8080/user/' + transaction.subjectid;
+    console.log("SAVE ", uri);
+    var postbody = 'subjectid=' + transaction.subjectid + '&record1=' + transaction.records;
+    console.log("POST BODY", postbody);
+    return function (dispatch) {
+        dispatch(SAVETODB_REQ(transaction));
+
+        return (0, _isomorphicFetch2.default)(uri, { method: 'post',
+            headers: { "Content-type": "application/x-www-form-urlencoded; charset=UTF-8" },
+            body: postbody }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            return dispatch(SAVETODB_SUCCESS(transaction.subjectid, json));
+        });
+    };
+}
 
 function LoadDB(subjectid) {
 
@@ -13400,7 +13442,7 @@ function LoadDB(subjectid) {
     return function (dispatch) {
         dispatch(LOADFMDB_REQ(subjectid));
 
-        return (0, _isomorphicFetch2.default)('https://182.54.217.24:8080/user/' + subjectid).then(function (response) {
+        return (0, _isomorphicFetch2.default)(uri, { method: "GET" }).then(function (response) {
             return response.json();
         }).then(function (json) {
             return dispatch(LOADFMDB_SUCCESS(subjectid, json));
@@ -21681,7 +21723,8 @@ function mapStateToProps(state) {
 
     return {
         title: state.title,
-        records: state.records
+        records: state.records,
+        subjectid: state.subjectid
     };
 } // import Action
 // client/js/containers/SecureContainer.js
@@ -21691,16 +21734,20 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
 
     return {
-        onLoad: function onLoad() {
-            dispatch((0, _actions.LOADFMSTORE)());
+        onLoad: function onLoad(subjectid) {
+            dispatch((0, _actions.LOADFMSTORE)(subjectid));
         },
         onSave: function onSave(state) {
             console.log(state);
-            dispatch((0, _actions.SAVETOSTORE)(state.records));
+            dispatch((0, _actions.SAVETOSTORE)(state));
         },
 
-        onLoadDB: function onLoadDB() {
-            dispatch((0, _actions.LoadDB)('1150'));
+        onLoadDB: function onLoadDB(subjectid) {
+            dispatch((0, _actions.LoadDB)(subjectid));
+        },
+
+        onSaveDB: function onSaveDB(transaction) {
+            dispatch((0, _actions.SaveDB)(transaction));
         }
 
     };
@@ -21747,7 +21794,9 @@ function storeReq() {
     switch (action.type) {
 
         case 'LOADFMDB_REQ':
-            return state;
+            return Object.assign({}, state, {
+                subjectid: action.subjectid
+            });
 
         case 'LOADFMDB_SUCCESS':
             return Object.assign({}, state, {
@@ -21757,6 +21806,19 @@ function storeReq() {
         case 'LOADFMDB_FAILURE':
             return state;
 
+        case 'SAVETODB_REQ':
+            return Object.assign({}, state, {
+                subjectid: action.subjectid,
+                records: action.records
+            });
+
+        case 'SAVETODB_SUCCESS':
+            return Object.assign({}, state, {
+                subjectid: action.subjectid
+            });
+
+        case 'SAVETODB_FAILURE':
+
         case 'ADDTITLE':
             return Object.assign({}, state, {
                 title: action.title
@@ -21764,6 +21826,7 @@ function storeReq() {
 
         case 'SAVETOSTORE':
             return Object.assign({}, state, {
+                subjectid: action.subjectid,
                 records: action.records
             });
 
@@ -22086,11 +22149,13 @@ var SecureView = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (SecureView.__proto__ || Object.getPrototypeOf(SecureView)).call(this, props));
 
-    _this.state = { records: '', dorender: false }; // records is a  dummy variable to clear the value so component is always displayed updated
+    _this.state = { records: '', subjectid: _this.props.subjectid, dorender: false }; // records is a  dummy variable to clear the value so component is always displayed updated
     _this.onTextChange = _this.onTextChange.bind(_this);
     _this.getTitle = _this.getTitle.bind(_this);
     _this.onLoadDBClick = _this.onLoadDBClick.bind(_this);
+    _this.onSaveDBClick = _this.onSaveDBClick.bind(_this);
     _this.onSaveClick = _this.onSaveClick.bind(_this);
+    _this.onLoadClick = _this.onLoadClick.bind(_this);
     return _this;
   }
 
@@ -22117,7 +22182,7 @@ var SecureView = function (_Component) {
   }, {
     key: 'onLoadClick',
     value: function onLoadClick(event) {
-      this.props.onLoad();
+      this.props.onLoad(this.state.subjectid);
     }
 
     // Load from Server DB
@@ -22125,7 +22190,13 @@ var SecureView = function (_Component) {
   }, {
     key: 'onLoadDBClick',
     value: function onLoadDBClick(event) {
-      this.props.onLoadDB();
+      this.props.onLoadDB(this.state.subjectid);
+      this.setState({ records: "", dorender: true });
+    }
+  }, {
+    key: 'onSaveDBClick',
+    value: function onSaveDBClick(event) {
+      this.props.onSaveDB(this.state);
       this.setState({ records: "", dorender: true });
     }
   }, {
@@ -22165,7 +22236,17 @@ var SecureView = function (_Component) {
               _react2.default.createElement('p', null),
               _react2.default.createElement(
                 _reactBootstrap.FormGroup,
-                { controlId: 'formControlsTextarea' },
+                { controlId: 'formControlsSubjectId' },
+                _react2.default.createElement(
+                  _reactBootstrap.ControlLabel,
+                  null,
+                  ' Subject ID '
+                ),
+                _react2.default.createElement(_reactBootstrap.FormControl, { componentClass: 'textarea', value: this.state.subjectid, placeholder: this.props.subjectid, name: 'subjectid', onChange: this.onTextChange })
+              ),
+              _react2.default.createElement(
+                _reactBootstrap.FormGroup,
+                { controlId: 'formControlsRecords' },
                 _react2.default.createElement(
                   _reactBootstrap.ControlLabel,
                   null,
@@ -22185,7 +22266,7 @@ var SecureView = function (_Component) {
             ),
             _react2.default.createElement(
               _reactBootstrap.Button,
-              { bsStyle: 'primary', onClick: this.onSaveClick },
+              { bsStyle: 'primary', onClick: this.onSaveDBClick },
               ' Save Fm'
             )
           )
@@ -22202,9 +22283,11 @@ var SecureView = function (_Component) {
 SecureView.propTypes = {
   title: _propTypes2.default.string.isRequired,
   records: _propTypes2.default.string,
+  subjectid: _propTypes2.default.string,
   onLoad: _propTypes2.default.func.isRequired,
   onSave: _propTypes2.default.func.isRequired,
-  onLoadDB: _propTypes2.default.func.isRequired
+  onLoadDB: _propTypes2.default.func.isRequired,
+  onSaveDB: _propTypes2.default.func.isRequired
 };
 
 exports.default = SecureView;

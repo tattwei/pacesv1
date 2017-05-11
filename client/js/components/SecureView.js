@@ -11,11 +11,13 @@ class SecureView extends Component{
 
   constructor(props){
      super(props);
-     this.state= {records: '', dorender:false};  // records is a  dummy variable to clear the value so component is always displayed updated
+     this.state= {records: '', subjectid: this.props.subjectid, dorender:false};  // records is a  dummy variable to clear the value so component is always displayed updated
      this.onTextChange = this.onTextChange.bind(this);
      this.getTitle = this.getTitle.bind(this);
      this.onLoadDBClick = this.onLoadDBClick.bind(this);
+     this.onSaveDBClick = this.onSaveDBClick.bind(this);
      this.onSaveClick = this.onSaveClick.bind(this);
+     this.onLoadClick= this.onLoadClick.bind(this);
   }
   
   getTitle(){
@@ -33,18 +35,23 @@ class SecureView extends Component{
 
   // Load from Store
   onLoadClick(event){
-    this.props.onLoad()
+    this.props.onLoad(this.state.subjectid)
   }
 
   // Load from Server DB
   onLoadDBClick(event){
-      this.props.onLoadDB()
+      this.props.onLoadDB(this.state.subjectid)
       this.setState({records: "", dorender:true})
+  }
+
+  onSaveDBClick(event){
+      this.props.onSaveDB(this.state)
+      this.setState({records:"", dorender:true})
   }
 
   onSaveClick(event){
       this.props.onSave(this.state)
-      this.setState({records:"", dorender:true})
+      this.setState({records: "", dorender:true})
   }
 
   componentDidUpdate(prevProps, prevState){
@@ -65,7 +72,13 @@ class SecureView extends Component{
       <p></p>
       <Panel header={mytitle} bsStyle="primary"> 
           <p></p>
-          <FormGroup controlId="formControlsTextarea">
+
+          <FormGroup controlId="formControlsSubjectId">
+            <ControlLabel> Subject ID </ControlLabel>
+            <FormControl componentClass="textarea" value={this.state.subjectid} placeholder={this.props.subjectid} name="subjectid" onChange={this.onTextChange} />
+          </FormGroup>
+
+          <FormGroup controlId="formControlsRecords">
             <ControlLabel> Records </ControlLabel>
             <FormControl componentClass="textarea" value={this.state.records} placeholder={this.props.records} name = "records" onChange={this.onTextChange} />
           </FormGroup>
@@ -73,7 +86,7 @@ class SecureView extends Component{
     </Panel>
     </Col>
     <p><Button bsStyle="primary" onClick={this.onLoadDBClick}>Load Fm</Button>
-       <Button bsStyle="primary" onClick={this.onSaveClick} > Save Fm</Button>
+       <Button bsStyle="primary" onClick={this.onSaveDBClick} > Save Fm</Button>
     </p>
 
     </Row>
@@ -88,9 +101,11 @@ class SecureView extends Component{
 SecureView.propTypes={
     title: PropTypes.string.isRequired,
     records: PropTypes.string,
+    subjectid: PropTypes.string,
     onLoad: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-    onLoadDB: PropTypes.func.isRequired
+    onLoadDB: PropTypes.func.isRequired,
+    onSaveDB: PropTypes.func.isRequired
 }
 
 export default SecureView

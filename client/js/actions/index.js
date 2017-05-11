@@ -10,16 +10,18 @@ export function ADDTITLE(title){
 
 }
 
-export function SAVETOSTORE (records){
+export function SAVETOSTORE (transaction){
     return{
         type: 'SAVETOSTORE',
-        records: records
+        records: transaction.records,
+        subjectid: transaction.subjectid
     }
 }
 
-export function LOADFMSTORE(){
+export function LOADFMSTORE(subjectid){
     return{
         type: 'LOADFMSTORE',
+        subjectid: subjectid
     }
 }
 
@@ -47,10 +49,45 @@ export function LOADFMDB_FAILURE(){
     }
 }
 
+export function SAVETODB_REQ(transaction){
+    return{
+        type: 'SAVETODB_REQ',
+        records: transaction.records,
+        subjectid: transaction.subjectid
+    }
+}
 
+export function SAVETODB_SUCCESS(subjectid, json){
+   console.log("SAVE RESP", json)
+    return{
+        type: 'SAVETODB_SUCCESS',
+        subjectid: subjectid,
+        receivedAt: Date.now()
+    }
+}
+
+export function SAVETODB_FAILURE(){
+}
 
 
 // Thunk action creator - returns functions rather than objects
+
+export function SaveDB(transaction){
+   const uri = `https://182.54.217.24:8080/user/${transaction.subjectid}`
+   console.log("SAVE ",uri)
+   const postbody = `subjectid=${transaction.subjectid}&record1=${transaction.records}`
+   console.log("POST BODY", postbody)
+   return function (dispatch){
+        dispatch(SAVETODB_REQ(transaction))
+
+        return fetch(uri, {method:'post',
+                           headers: {"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"}, 
+                            body:postbody})
+               .then(response=>response.json())
+               .then((json)=>dispatch(SAVETODB_SUCCESS(transaction.subjectid, json))) 
+   }
+
+}
 
 
 export function LoadDB(subjectid){
@@ -60,7 +97,7 @@ export function LoadDB(subjectid){
     return function(dispatch){
         dispatch(LOADFMDB_REQ(subjectid))
 
-        return fetch(`https://182.54.217.24:8080/user/${subjectid}`)
+        return fetch(uri, {method: "GET"})
 		.then(response=>response.json())
 		.then((json)=>dispatch(LOADFMDB_SUCCESS(subjectid, json)) )
     }
