@@ -3,6 +3,12 @@ export function storeReq(state={}, action){
 
     switch(action.type){
 
+	case 'AUTHENTICATE':
+	    return Object.assign({}, state, {
+		   tokenized: action.tokenized,
+                   token: action.token
+	    })
+
         case 'LOADFMDB_REQ':
             return Object.assign({}, state,{
                   subjectid: action.subjectid

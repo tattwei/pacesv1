@@ -3,7 +3,8 @@
 import 'stylesheets/base.sass'
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import {FormGroup, ControlLabel, FormControl, ListGroup, ListGroupItem, Clearfix, Grid, Row, Col, Panel, Button } from 'react-bootstrap'
+import {FormGroup, ControlLabel, FormControl, ListGroup, ListGroupItem, Clearfix, Grid, Row, Col, Panel, Button, ButtonToolbar } from 'react-bootstrap'
+import LoginView from './LoginView'
 
 //const title = (<h1> Patient Record </h1>);
 
@@ -11,13 +12,17 @@ class SecureView extends Component{
 
   constructor(props){
      super(props);
-     this.state= {records: '', subjectid: this.props.subjectid, dorender:false};  // records is a  dummy variable to clear the value so component is always displayed updated
+     this.state= {records: '', 
+                  subjectid: this.props.subjectid, 
+                  dorender:false,
+                  };  // records is a  dummy variable to clear the value so component is always displayed updated
      this.onTextChange = this.onTextChange.bind(this);
      this.getTitle = this.getTitle.bind(this);
      this.onLoadDBClick = this.onLoadDBClick.bind(this);
      this.onSaveDBClick = this.onSaveDBClick.bind(this);
      this.onSaveClick = this.onSaveClick.bind(this);
      this.onLoadClick= this.onLoadClick.bind(this);
+     this.onLogoutClick = this.onLogoutClick.bind(this);
   }
   
   getTitle(){
@@ -40,18 +45,22 @@ class SecureView extends Component{
 
   // Load from Server DB
   onLoadDBClick(event){
-      this.props.onLoadDB(this.state.subjectid)
+      this.props.onLoadDB(this.state.subjectid, this.props.token)
       this.setState({records: "", dorender:true})
   }
 
   onSaveDBClick(event){
-      this.props.onSaveDB(this.state)
+      this.props.onSaveDB(this.state, this.props.token)
       this.setState({records:"", dorender:true})
   }
 
   onSaveClick(event){
       this.props.onSave(this.state)
       this.setState({records: "", dorender:true})
+  }
+
+  onLogoutClick(event){
+       this.props.onAuthenticate("","")  // blank username and pasword
   }
 
   componentDidUpdate(prevProps, prevState){
@@ -65,6 +74,8 @@ class SecureView extends Component{
   render(){
 
     const mytitle = this.getTitle()
+    if (this.props.tokenized ){
+
     return ( 
     <Grid>
       <Row className="show-grid">
@@ -85,14 +96,18 @@ class SecureView extends Component{
           
     </Panel>
     </Col>
-    <p><Button bsStyle="primary" onClick={this.onLoadDBClick}>Load Fm</Button>
-       <Button bsStyle="primary" onClick={this.onSaveDBClick} > Save Fm</Button>
-    </p>
+    <p><ButtonToolbar>
+       <Button bsStyle="primary" onClick={this.onLoadDBClick}>Load Fm</Button> 
+       <Button bsStyle="success" onClick={this.onSaveDBClick} > Save Fm</Button>
+       <Button bsStyle="danger" onClick = {this.onLogoutClick}>Logout </Button>
+    </ButtonToolbar></p>
 
     </Row>
     </Grid>      
   );
-  }
+  } else{
+    return(<LoginView onAuthenticateClick = {this.props.onAuthenticate}/>);
+  }}
 };
 
 
@@ -102,10 +117,13 @@ SecureView.propTypes={
     title: PropTypes.string.isRequired,
     records: PropTypes.string,
     subjectid: PropTypes.string,
+    tokenized: PropTypes.bool,
+    token : PropTypes.string,
     onLoad: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
     onLoadDB: PropTypes.func.isRequired,
-    onSaveDB: PropTypes.func.isRequired
+    onSaveDB: PropTypes.func.isRequired,
+    onAuthenticate: PropTypes.func.isRequired
 }
 
 export default SecureView

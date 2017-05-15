@@ -5,7 +5,7 @@
 import {React, Component} from 'react'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
-import {SaveDB, LoadDB, LOADFMSTORE, SAVETOSTORE} from  '../actions'   // import Action
+import {Authenticate, SaveDB, LoadDB, LOADFMSTORE, SAVETOSTORE} from  '../actions'   // import Action
 import SecureView from '../components/SecureView' // Import Presentational Component
  
 function mapStateToProps(state){
@@ -15,7 +15,9 @@ function mapStateToProps(state){
     return({
         title: state.title,
         records: state.records,
-        subjectid: state.subjectid
+        subjectid: state.subjectid,
+        tokenized: state.tokenized,
+        token : state.token,
     });
 }
 
@@ -30,12 +32,16 @@ function mapDispatchToProps(dispatch){
              dispatch(SAVETOSTORE(state))
         },
 
-        onLoadDB: (subjectid)=>{
-             dispatch(LoadDB(subjectid))
+        onLoadDB: (subjectid, token)=>{
+             dispatch(LoadDB(subjectid,token))
         },
 
-        onSaveDB: (transaction)=>{
-             dispatch(SaveDB(transaction))
+        onSaveDB: (transaction, token)=>{
+             dispatch(SaveDB(transaction, token))
+        },
+
+        onAuthenticate: (username, password)=>{
+	     dispatch(Authenticate(username, password))
         }
      
     })
@@ -58,7 +64,7 @@ function mapDispatchToProps(dispatch){
 const SecureContainer = connect(mapStateToProps, mapDispatchToProps)(SecureView)
 
 SecureContainer.propTypes={
-    dispatch: PropTypes.func.isRequired
+    //dispatch: PropTypes.func.isRequired
 }
 
 

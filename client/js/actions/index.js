@@ -2,6 +2,24 @@
 
 import fetch from 'isomorphic-fetch'
 
+export function AUTHENTICATE(json){
+    console.log(json)    
+
+    if(json.success){
+        return{
+	    type: 'AUTHENTICATE',
+            tokenized: true,
+            token: json.token
+        };
+    }else{
+        return{
+            type: 'AUTHENTICATE',
+            tokenized : false,
+            token: ""
+        };
+    }
+}
+
 export function ADDTITLE(title){
     return{
         type: 'ADDTITLE',
@@ -72,15 +90,22 @@ export function SAVETODB_FAILURE(){
 
 // Thunk action creator - returns functions rather than objects
 
-const header = {"Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-		"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyIkX18iOnsic3RyaWN0TW9kZSI6dHJ1ZSwic2VsZWN0ZWQiOnt9LCJnZXR0ZXJzIjp7fSwid2FzUG9wdWxhdGVkIjpmYWxzZSwiYWN0aXZlUGF0aHMiOnsicGF0aHMiOnsiaXNBZG1pbiI6ImluaXQiLCJwYXNzd29yZCI6ImluaXQiLCJuYW1lIjoiaW5pdCIsIl9pZCI6ImluaXQifSwic3RhdGVzIjp7Imlnbm9yZSI6e30sImRlZmF1bHQiOnt9LCJpbml0Ijp7ImlzQWRtaW4iOnRydWUsInBhc3N3b3JkIjp0cnVlLCJuYW1lIjp0cnVlLCJfaWQiOnRydWV9LCJtb2RpZnkiOnt9LCJyZXF1aXJlIjp7fX0sInN0YXRlTmFtZXMiOlsicmVxdWlyZSIsIm1vZGlmeSIsImluaXQiLCJkZWZhdWx0IiwiaWdub3JlIl19LCJlbWl0dGVyIjp7ImRvbWFpbiI6bnVsbCwiX2V2ZW50cyI6e30sIl9ldmVudHNDb3VudCI6MCwiX21heExpc3RlbmVycyI6MH19LCJpc05ldyI6ZmFsc2UsIl9kb2MiOnsiaXNBZG1pbiI6ZmFsc2UsInBhc3N3b3JkIjoicHciLCJuYW1lIjoiZXJpYyIsIl9pZCI6IjU5MTQyNDE0NTljNWRmOWQzNzI2Yzg5MSJ9LCJpYXQiOjE0OTQ0OTI0MzQsImV4cCI6MTQ5NDU3ODgzNH0.POGeAMTZMKiF2crzjn6PeXS6ZRk_r72lWBVL-QhyWsQ"
-		}
+function assembleHeader(token){
 
-export function SaveDB(transaction){
+    return {"Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-access-token": token
+           }
+		//"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyIkX18iOnsic3RyaWN0TW9kZSI6dHJ1ZSwic2VsZWN0ZWQiOnt9LCJnZXR0ZXJzIjp7fSwid2FzUG9wdWxhdGVkIjpmYWxzZSwiYWN0aXZlUGF0aHMiOnsicGF0aHMiOnsiaXNBZG1pbiI6ImluaXQiLCJwYXNzd29yZCI6ImluaXQiLCJuYW1lIjoiaW5pdCIsIl9pZCI6ImluaXQifSwic3RhdGVzIjp7Imlnbm9yZSI6e30sImRlZmF1bHQiOnt9LCJpbml0Ijp7ImlzQWRtaW4iOnRydWUsInBhc3N3b3JkIjp0cnVlLCJuYW1lIjp0cnVlLCJfaWQiOnRydWV9LCJtb2RpZnkiOnt9LCJyZXF1aXJlIjp7fX0sInN0YXRlTmFtZXMiOlsicmVxdWlyZSIsIm1vZGlmeSIsImluaXQiLCJkZWZhdWx0IiwiaWdub3JlIl19LCJlbWl0dGVyIjp7ImRvbWFpbiI6bnVsbCwiX2V2ZW50cyI6e30sIl9ldmVudHNDb3VudCI6MCwiX21heExpc3RlbmVycyI6MH19LCJpc05ldyI6ZmFsc2UsIl9kb2MiOnsiaXNBZG1pbiI6ZmFsc2UsInBhc3N3b3JkIjoicHciLCJuYW1lIjoiZXJpYyIsIl9pZCI6IjU5MTQyNDE0NTljNWRmOWQzNzI2Yzg5MSJ9LCJpYXQiOjE0OTQ0OTI0MzQsImV4cCI6MTQ5NDU3ODgzNH0.POGeAMTZMKiF2crzjn6PeXS6ZRk_r72lWBVL-QhyWsQ"
+}
+
+
+export function SaveDB(transaction, token){
    const uri = `https://182.54.217.24:8080/user/${transaction.subjectid}`
    console.log("SAVE ",uri)
    const postbody = `subjectid=${transaction.subjectid}&record1=${transaction.records}`
    console.log("POST BODY", postbody)
+
+   let header = assembleHeader(token)
    return function (dispatch){
         dispatch(SAVETODB_REQ(transaction))
 
@@ -93,11 +118,12 @@ export function SaveDB(transaction){
 
 }
 
-
-export function LoadDB(subjectid){
+export function LoadDB(subjectid, token){
 
     const uri = `https://182.54.217.24:8080/user/${subjectid}`
     console.log(uri)
+    let header = assembleHeader(token)
+
     return function(dispatch){
         dispatch(LOADFMDB_REQ(subjectid))
 
@@ -108,4 +134,19 @@ export function LoadDB(subjectid){
 		.then((json)=>dispatch(LOADFMDB_SUCCESS(subjectid, json)) )
     }
 
+}
+
+export function Authenticate(username, password){
+    const uri = `https://182.54.217.24:8080/authenticate`
+    console.log("Authenticating")
+    let header = assembleHeader("")
+    const postbody=`name=${username}&password=${password}`
+    return  function (dispatch){
+
+	  return fetch(uri, {method: "POST", 
+                       headers: header,
+	               body: postbody})
+          .then(response=>response.json())
+          .then((json)=>dispatch(AUTHENTICATE(json)) )
+   }
 }

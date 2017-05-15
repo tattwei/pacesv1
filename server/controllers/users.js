@@ -5,6 +5,8 @@
 let Models = require('../models')
 let jwt = require('jsonwebtoken')
 
+const privateKey = "PACESisthefuture!"
+
 module.exports={
     
    auth(req,res){
@@ -29,7 +31,6 @@ module.exports={
 		    });
 		} else {
 
-		    var privateKey = "PACESisthefuture!"
 		    // Create a token
 		    var token = jwt.sign(user, privateKey ,{expiresIn: '24h'});
 		    res.json({

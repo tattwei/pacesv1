@@ -7,7 +7,7 @@ module.exports={
 
    auth(req,res,next){
 	var token = req.body.token || req.query.token ||req.headers['x-access-token']
-	console.log(token)
+	//console.log(token)
 	if(token){
 	    let privateKey= "PACESisthefuture!"
 	    jwt.verify(token, privateKey, (err, decoded)=>{
