@@ -118,17 +118,17 @@ class DemogView extends Component{
 
         <FormGroup controlId="formParentsName">
             <Col componentClass={ControlLabel} sm={2}>Parents Name</Col>
-            <Col sm={10}><FormControl type="text" name = "idParentsName" placeholder={this.props.Records.ParentsName} onChange={this.onInputChange}/> </Col>
+            <Col sm={10}><FormControl type="text" name = "idParentsName" placeholder={this.props.Records.idParentsName} onChange={this.onInputChange}/> </Col>
         </FormGroup>
         
        <FormGroup controlId="formParentsContact">
             <Col componentClass={ControlLabel} sm={2}>Parents Contact</Col>
-            <Col sm={10}><FormControl type="text" name = "idParentsContact" placeholder={this.props.Records.ParentsContact} onChange={this.onInputChange}/> </Col>
+            <Col sm={10}><FormControl type="text" name = "idParentsContact" placeholder={this.props.Records.idParentsContact} onChange={this.onInputChange}/> </Col>
         </FormGroup>
 
         <FormGroup controlId="formParentsEmail">
             <Col componentClass={ControlLabel} sm={2}>Parents Email</Col>
-            <Col sm={10}><FormControl type="email" name="idParentsEmail" placeholder={this.props.Records.ParentsEmail} onChange={this.onInputChange}/> </Col>
+            <Col sm={10}><FormControl type="email" name="idParentsEmail" placeholder={this.props.Records.idParentsEmail} onChange={this.onInputChange}/> </Col>
         </FormGroup>
 
         <FormGroup controlId="formParentsAddress">
