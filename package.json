@@ -1,7 +1,7 @@
 {
-  "name": "simpledbserver",
+  "name": "pacesv1",
   "version": "1.0.0",
-  "description": "example mongodb server plus react frontend",
+  "description": "PACES webform linked to database with authentication",
   "main": "server/server.js",
   "dependencies": {
     "babel-polyfill": "^6.23.0",
@@ -58,11 +58,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tattwei/simpledbserver.git"
+    "url": "git+https://github.com/tattwei/pacesv1.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --use_strict server/server.js"
+    "start": "node --use_strict server/server.js",
+    "stop": "pkill --signal SIGINT pacesv1"
   },
   "author": "Eric ho",
   "license": "ISC"

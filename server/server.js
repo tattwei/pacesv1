@@ -11,6 +11,7 @@ let express = require('express'),
 	}
  
 app = configure(app)
+process.title = "pacesv1"
 
 var server = https.createServer(options,app);
 
