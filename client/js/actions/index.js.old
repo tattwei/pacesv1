@@ -9,15 +9,13 @@ export function AUTHENTICATE(json){
         return{
 	    type: 'AUTHENTICATE',
             tokenized: true,
-            token: json.token,
-            numrecords: 0
+            token: json.token
         };
     }else{
         return{
             type: 'AUTHENTICATE',
             tokenized : false,
-            token: "",
-            numrecords: 0
+            token: ""
         };
     }
 }
@@ -30,68 +28,49 @@ export function ADDTITLE(title){
 
 }
 
-
-export function RESET(json){
+export function SAVETOSTORE (transaction){
     return{
-        type: 'RESET',
-        success: true,
-        numrecords :1,
-        records:[{
-          idFirstName: "Patient's First Name",
-          idLastName: "Patient's Last Name",
-          idNumber: "Patient's IC Number",
-          idDOB: "Patient's Date of Birth (yyyy-mm-dd)",
-          idSex: "Patient's Gender (Male or Female)",
-          idParentsName: "Parents of Patient",
-          idParentsContact: "Contact Phone Number",
-          idParentsEmail: "Parents Email Address",
-          idAddress: "Home Address",
-          idLanguage: "Click to Select",
-          clinDiag1: "Clinical Diagnosis",
-          clinDiag2: "Clinical Diagnosis",
-          clinDiag3: "Clinical Diagnosis",
-          clinIsEpilepsy: false
-        }]
+        type: 'SAVETOSTORE',
+        records: transaction.records,
+        subjectid: transaction.subjectid
     }
 }
 
-export function LOADFMDB_REQ(filter){
+export function LOADFMSTORE(subjectid){
+    return{
+        type: 'LOADFMSTORE',
+        subjectid: subjectid
+    }
+}
+
+export function LOADFMDB_REQ(subjectid){
     return{
         type: 'LOADFMDB_REQ',
-        filter : filter,
-        numrecords: 0
+        subjectid : subjectid
     }
 }
 
-export function LOADFMDB_SUCCESS(filter, json){
+export function LOADFMDB_SUCCESS(subjectid, json){
 
-    console.log(json.message, json.numrecords)
+    console.log(subjectid, json[0])
     return{
         type: 'LOADFMDB_SUCCESS',
-        success: json.success,
-        message: json.message,
-        numrecords: json.numrecords,
-        records: json.records,
-        idFirstName: json.records[0].idFirstName,
+        subjectid: subjectid,
+        records: json[0].record1,
         receivedAt: Date.now()
     }
 }
 
-export function LOADFMDB_FAILURE(filter,json){
+export function LOADFMDB_FAILURE(){
     return{
-        type: 'LOADFMDB_FAILURE',
-        success: json.success,
-        message: json.message,
-        numrecords: json.numrecords,
-        records: filter,
-        receivedAt: Date.now()
+        type: 'LOADFMDB_FAILURE'
     }
 }
 
 export function SAVETODB_REQ(transaction){
     return{
         type: 'SAVETODB_REQ',
-        records: transaction,
+        records: transaction.records,
         subjectid: transaction.subjectid
     }
 }
@@ -120,13 +99,10 @@ function assembleHeader(token){
 }
 
 
-
-
 export function SaveDB(transaction, token){
-   const uri = `https://182.54.217.24:8080/user/${transaction.idNumber}`
+   const uri = `https://182.54.217.24:8080/user/${transaction.subjectid}`
    console.log("SAVE ",uri)
-   //const postbody = `subjectid=${transaction.subjectid}&record1=${transaction.records}`
-   const postbody = 'record=${transaction}'
+   const postbody = `subjectid=${transaction.subjectid}&record1=${transaction.records}`
    console.log("POST BODY", postbody)
 
    let header = assembleHeader(token)
@@ -137,35 +113,25 @@ export function SaveDB(transaction, token){
                            headers: header,
                            body:postbody})
                .then(response=>response.json())
-               .then((json)=>dispatch(SAVETODB_SUCCESS(transaction, json))) 
+               .then((json)=>dispatch(SAVETODB_SUCCESS(transaction.subjectid, json))) 
    }
 
 }
 
-export function LoadDB(transaction, token){
+export function LoadDB(subjectid, token){
 
-    const uri = `https://182.54.217.24:8080/user/${transaction.idNumber}`
+    const uri = `https://182.54.217.24:8080/user/${subjectid}`
     console.log(uri)
     let header = assembleHeader(token)
 
-    let filter = {idNumber: transaction.idNumber}
-
     return function(dispatch){
-        dispatch(LOADFMDB_REQ(filter))
+        dispatch(LOADFMDB_REQ(subjectid))
 
         return fetch(uri, {method: "GET",
 			   headers: header
 			   })
 		.then(response=>response.json())
-		.then((json)=>{
-                   console.log("Req Successful? ",json.success)
-
-                    if (json.success){
-                        dispatch(LOADFMDB_SUCCESS(filter, json))
-                    }else{
-                        dispatch(LOADFMDB_FAILURE(filter, json))
-                    } 
-                })
+		.then((json)=>dispatch(LOADFMDB_SUCCESS(subjectid, json)) )
     }
 
 }

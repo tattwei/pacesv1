@@ -44,8 +44,18 @@ module.exports={
 
     load(req,res){
        //res.send(req.params.subjectid)
+
+       console.log("DB Search filter is ",req.params)
 	Models.DBreq.find(req.params, (err,record)=>{
-		res.json(record)           
+
+            console.log("DB found record(s) ", record)
+            if(record.length==0){
+               res.json({ success: false, message: "No records found", numrecords: 0 })
+
+            }else{
+               res.json({success: true, message: "OK", numrecords: record.length, records: record})
+            }
+            
 	})
     }
 }

@@ -8,21 +8,12 @@ export function storeReq(state={}, action){
 		   tokenized: action.tokenized,
                    token: action.token
 	    })
-        case 'RESET':
-            return Object.assign({}, state, {
-                   numrecords: action.numrecords,
-                   records: action.records,
-                   success: action.success
-            })
 
         case 'LOADFMDB_REQ':
-            return Object.assign({}, state,{
-                  
-            })
+            
 
         case 'LOADFMDB_SUCCESS':
             return Object.assign({}, state, {
-                   success: action.success,
                    message: action.message,
                    numrecords: action.numrecords,
                    records: action.records
@@ -30,7 +21,6 @@ export function storeReq(state={}, action){
 
         case 'LOADFMDB_FAILURE':
 	    return Object.assign({}, state, {
-                   success: action.success,
                    message: action.message,
                    numrecords: action.numrecords,
                    records: action.records
@@ -55,14 +45,6 @@ export function storeReq(state={}, action){
 		title: action.title
             })
 
-        case 'SAVETOSTORE':
-            return Object.assign({}, state, {
-                subjectid: action.subjectid,
-                records: action.records
-            })
-
-        case 'LOADFMSTORE':
-        default: return state
     }
 }
 

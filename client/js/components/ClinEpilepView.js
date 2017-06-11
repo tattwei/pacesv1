@@ -35,25 +35,25 @@ class ClinEpilepView extends Component{
          <FormGroup controlId="formEpilepsyType">
             <Col componentClass={ControlLabel} sm={2}> Epilepsy Subtype </Col>
             <Col sm={10}>
-            <Radio name="idSex" value = "Focal" inline onChange={this.onInputChange}> Focal </Radio> {"      "}
-            <Radio name="idSex" value = "Generalized" inline onChange={this.onInputChange}> Generalized </Radio> 
+            <Radio name="clinEpiIsFocal" value = "Focal" inline onChange={this.onInputChange}> Focal </Radio> {"      "}
+            <Radio name="clinEpiIsFocal" value = "Generalized" inline onChange={this.onInputChange}> Generalized </Radio> 
             </Col>
           </FormGroup>
 
         <FormGroup controlId="formFirstSeizureVisit">
             <Col componentClass={ControlLabel} sm={2}>Fist Seizure Visit </Col>
-            <Col sm={10}><FormControl type="text" name = "idFirstSeizure" placeholder="Is this the first visit to doctor for Seizure?" onChange={this.onInputChange}/> </Col>
+            <Col sm={10}><FormControl type="text" name = "clinEpiFirstSeizure" placeholder="Is this the first visit to doctor for Seizure?" onChange={this.onInputChange}/> </Col>
         </FormGroup>
         
        <FormGroup controlId="formEpilepsyDrugs">
             <Col componentClass={ControlLabel} sm={2}>Epilepsy Drugs</Col>
-            <Col sm={10}><FormControl componentClass="textarea" name = "idDrugsEpilepsy" placeholder="Drugs used in epilepsy" onChange={this.onInputChange}/> </Col>
+            <Col sm={10}><FormControl componentClass="textarea" name = "clinEpiDrugs" placeholder="Drugs used in epilepsy" onChange={this.onInputChange}/> </Col>
         </FormGroup>
 
 
         <FormGroup controlId="formTreatmentProgress">
             <Col componentClass={ControlLabel} sm={2}>Treatment Progress</Col>
-            <Col sm={10}><FormControl componentClass="textarea" name="idProgressTreatment" placeholder="Progress of Treatment" onChange={this.onInputChange}/> </Col>
+            <Col sm={10}><FormControl componentClass="textarea" name="clinEpiTreatmentProgress" placeholder="Progress of Treatment" onChange={this.onInputChange}/> </Col>
         </FormGroup>
      </Form>
      

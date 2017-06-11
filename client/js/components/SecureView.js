@@ -13,18 +13,18 @@ class SecureView extends Component{
 
   constructor(props){
      super(props);
-     this.state= {records: '', 
-                  subjectid: this.props.subjectid,
-                  idIsEpilepsy: false, 
+     this.state= {
+                  idNumber: '',
+                  clinIsEpilepsy: false, 
                   dorender:false,
+                  isView: false
                   };  // records is a  dummy variable to clear the value so component is always displayed updated
      this.onTextChange = this.onTextChange.bind(this);
      this.getTitle = this.getTitle.bind(this);
      this.onLoadDBClick = this.onLoadDBClick.bind(this);
      this.onSaveDBClick = this.onSaveDBClick.bind(this);
-     this.onSaveClick = this.onSaveClick.bind(this);
-     this.onLoadClick= this.onLoadClick.bind(this);
      this.onLogoutClick = this.onLogoutClick.bind(this);
+     this.onResetClick = this.onResetClick.bind(this);
   }
   
   getTitle(){
@@ -40,29 +40,35 @@ class SecureView extends Component{
     this.setState({[name]:value})
   }
 
-  // Load from Store
-  onLoadClick(event){
-    this.props.onLoad(this.state.subjectid)
-  }
-
   // Load from Server DB
   onLoadDBClick(event){
-      this.props.onLoadDB(this.state.subjectid, this.props.token)
-      this.setState({records: "", dorender:true})
+      if (this.state.isView){
+        this.setState({isView:false})
+      }else{
+      this.props.onLoadDB(this.state, this.props.token)
+      this.setState({dorender:true, isView:true})
+      }
   }
 
   onSaveDBClick(event){
+
+      if (this.state.isView){
+          this.setState({isView: false})
+      }else{
       this.props.onSaveDB(this.state, this.props.token)
-      this.setState({records:"", dorender:true})
+      this.setState({ dorender:true})
+      }
   }
 
-  onSaveClick(event){
-      this.props.onSave(this.state)
-      this.setState({records: "", dorender:true})
+  onResetClick(event){
+    this.props.onReset()
+    this.setState({dorender: true, idNumber: ""})
   }
 
   onLogoutClick(event){
+       this.props.onReset()
        this.props.onAuthenticate("","")  // blank username and pasword
+       this.setState(idNumber:"")
   }
 
   componentDidUpdate(prevProps, prevState){
@@ -85,8 +91,8 @@ class SecureView extends Component{
       <p></p>
       <Panel header={mytitle} bsStyle="primary"> 
          <p> </p>
-          <DemogView onTextChange={this.onTextChange}/>
-          <ClinicalView onTextChange={this.onTextChange} showEpilepsy={this.state.idIsEpilepsy}/>
+          <DemogView onTextChange={this.onTextChange} isView={this.state.isView} Records = {this.props}/>
+          <ClinicalView onTextChange={this.onTextChange} showEpilepsy={this.state.clinIsEpilepsy}/>
           <p></p>
       </Panel>
       </Col>
@@ -94,6 +100,7 @@ class SecureView extends Component{
     <p></p>
      <ButtonToolbar>
        <Button bsStyle="primary" onClick={this.onLoadDBClick}>Load Fm</Button> 
+        <Button bsStyle="primary" onClick={this.onResetClick}>Reset Fm</Button> 
        <Button bsStyle="success" onClick={this.onSaveDBClick} > Save Fm</Button>
        <Button bsStyle="danger" onClick = {this.onLogoutClick}>Logout </Button>
     </ButtonToolbar>
@@ -111,15 +118,18 @@ class SecureView extends Component{
 
 SecureView.propTypes={
     title: PropTypes.string.isRequired,
-    records: PropTypes.string,
-    subjectid: PropTypes.string,
     tokenized: PropTypes.bool,
     token : PropTypes.string,
-    onLoad: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired,
+    idFirstName: PropTypes.string,
+    idLastName: PropTypes.string,
+    idSex: PropTypes.string,
+    idParentsName: PropTypes.string,
+    clinDiag1: PropTypes.string,
+    clinIsEpilepsy: PropTypes.bool,
     onLoadDB: PropTypes.func.isRequired,
     onSaveDB: PropTypes.func.isRequired,
-    onAuthenticate: PropTypes.func.isRequired
+    onAuthenticate: PropTypes.func.isRequired,
+    onReset: PropTypes.func.isRequired
 }
 
 export default SecureView

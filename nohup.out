@@ -212,3 +212,65 @@ npm ERR! There is likely additional logging output above.
 
 npm ERR! Please include the following file with any support request:
 npm ERR!     /home/cms/eric/pacesv1/npm-debug.log
+
+> pacesv1@1.0.0 start /home/cms/eric/pacesv1
+> node --use_strict server/server.js
+
+MongoDB connected.
+Server listening at https://localhost:8080
+[0mGET / [32m200 [0m27.689 ms - 429[0m
+[0mGET /app.js [32m200 [0m5.672 ms - 2056957[0m
+
+npm ERR! Linux 4.8.0-41-generic
+npm ERR! argv "/usr/bin/nodejs" "/usr/bin/npm" "start"
+npm ERR! node v7.7.4
+npm ERR! npm  v4.1.2
+npm ERR! code ELIFECYCLE
+npm ERR! pacesv1@1.0.0 start: `node --use_strict server/server.js`
+npm ERR! Exit status 130
+npm ERR! 
+npm ERR! Failed at the pacesv1@1.0.0 start script 'node --use_strict server/server.js'.
+npm ERR! Make sure you have the latest version of node.js and npm installed.
+npm ERR! If you do, this is most likely a problem with the pacesv1 package,
+npm ERR! not with npm itself.
+npm ERR! Tell the author that this fails on your system:
+npm ERR!     node --use_strict server/server.js
+npm ERR! You can get information on how to open an issue for this project with:
+npm ERR!     npm bugs pacesv1
+npm ERR! Or if that isn't available, you can get their info via:
+npm ERR!     npm owner ls pacesv1
+npm ERR! There is likely additional logging output above.
+
+npm ERR! Please include the following file with any support request:
+npm ERR!     /home/cms/eric/pacesv1/npm-debug.log
+
+> pacesv1@1.0.0 start /home/cms/eric/pacesv1
+> node --use_strict server/server.js
+
+MongoDB connected.
+Server listening at https://localhost:8080
+[0mGET / [32m200 [0m33.621 ms - 429[0m
+[0mGET /app.js [32m200 [0m9.797 ms - 2055891[0m
+
+npm ERR! Linux 4.8.0-41-generic
+npm ERR! argv "/usr/bin/nodejs" "/usr/bin/npm" "start"
+npm ERR! node v7.7.4
+npm ERR! npm  v4.1.2
+npm ERR! code ELIFECYCLE
+npm ERR! pacesv1@1.0.0 start: `node --use_strict server/server.js`
+npm ERR! Exit status 130
+npm ERR! 
+npm ERR! Failed at the pacesv1@1.0.0 start script 'node --use_strict server/server.js'.
+npm ERR! Make sure you have the latest version of node.js and npm installed.
+npm ERR! If you do, this is most likely a problem with the pacesv1 package,
+npm ERR! not with npm itself.
+npm ERR! Tell the author that this fails on your system:
+npm ERR!     node --use_strict server/server.js
+npm ERR! You can get information on how to open an issue for this project with:
+npm ERR!     npm bugs pacesv1
+npm ERR! Or if that isn't available, you can get their info via:
+npm ERR!     npm owner ls pacesv1
+npm ERR! There is likely additional logging output above.
+
+npm ERR! Please include the following file with any support request:
+npm ERR!     /home/cms/eric/pacesv1/npm-debug.log

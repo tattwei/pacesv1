@@ -34,22 +34,22 @@ class ClinBasicView extends Component{
       <Form horizontal>
           <FormGroup controlId="formDiagnosisPrimary">
               <Col sm={2} componentClass={ControlLabel}>Primary Diagnosis</Col> 
-              <Col sm={10}><FormControl componentClass="textarea" name="idDiag1" placeholder="Primary Diagnosis" onChange={this.onInputChange}/> </Col>
+              <Col sm={10}><FormControl componentClass="textarea" name="clinDiag1" placeholder="Primary Diagnosis" onChange={this.onInputChange}/> </Col>
           </FormGroup>
           
           <FormGroup controlId="formDiagnosis2">
             <Col sm={2} componentClass={ControlLabel}> Diagnosis 2 </Col>
-            <Col sm={10}><FormControl componentClass="textarea" name = "idDiag2" placeholder="Secondary Diagnosis (if any)" onChange={this.onInputChange}/></Col>
+            <Col sm={10}><FormControl componentClass="textarea" name = "clinDiag2" placeholder="Secondary Diagnosis (if any)" onChange={this.onInputChange}/></Col>
           </FormGroup>
          
           <FormGroup controlId="formDiagnosis3">
             <Col componentClass={ControlLabel} sm={2}> Diagnosis 3 </Col>
-            <Col sm={10}><FormControl componentClass="textarea" name = "idDiag3" placeholder="Tertiary Diagnosis (if any)" onChange={this.onInputChange}/></Col>
+            <Col sm={10}><FormControl componentClass="textarea" name = "clinDiag3" placeholder="Tertiary Diagnosis (if any)" onChange={this.onInputChange}/></Col>
           </FormGroup>
 
          <FormGroup controlId="formIsEpilepsy">
             <Col componentClass={ControlLabel} sm={2}>Patient with Epilepsy</Col>
-            <Col sm={10}><Checkbox name="idIsEpilepsy" onChange={this.onInputChange}>Yes </Checkbox> </Col>
+            <Col sm={10}><Checkbox name="clinIsEpilepsy" onChange={this.onInputChange}>Yes </Checkbox> </Col>
          </FormGroup>
 
     </Form>

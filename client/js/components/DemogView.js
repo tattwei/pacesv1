@@ -27,22 +27,85 @@ class DemogView extends Component{
 
   render(){
 
+  if(this.props.isView){
+
+    return(
+        <Form horizontal>
+            <FormGroup controlId="formPatientFirstName">
+                <Col sm={2} componentClass={ControlLabel}> First Name</Col>
+                <Col sm={10}><FormControl.Static>{this.props.Records.idFirstName}</FormControl.Static></Col>
+            </FormGroup>
+           <FormGroup controlId="formPatientLastName">
+            <Col sm={2} componentClass={ControlLabel}> Last Name </Col>
+            <Col sm={10}><FormControl.Static>{this.props.Records.idLastName}</FormControl.Static></Col>
+          </FormGroup>
+         
+          <FormGroup controlId="formPatientID">
+            <Col componentClass={ControlLabel} sm={2}> I.C. number  </Col>
+            <Col sm={10}><FormControl.Static>{this.props.Records.idNumber}</FormControl.Static></Col>
+          </FormGroup>
+
+          <FormGroup controlId="formPatientDOB">
+            <Col componentClass={ControlLabel} sm={2}> D.O.B </Col>
+            <Col sm={10}><FormControl.Static>{this.props.Records.idDOB}</FormControl.Static></Col>
+          </FormGroup>
+
+         <FormGroup controlId="formPatientSex">
+            <Col componentClass={ControlLabel} sm={2}> Sex </Col>
+            <Col sm={10}><FormControl.Static>{this.props.Records.idSex}</FormControl.Static>
+            </Col>
+          </FormGroup>
+
+        <FormGroup controlId="formParentsName">
+            <Col componentClass={ControlLabel} sm={2}>Parents Name</Col>
+            <Col sm={10}><FormControl.Static>{this.props.Records.idParentsName}</FormControl.Static> </Col>
+        </FormGroup>
+        
+       <FormGroup controlId="formParentsContact">
+            <Col componentClass={ControlLabel} sm={2}>Parents Contact</Col>
+            <Col sm={10}><FormControl.Static>{this.props.Records.idParentsContact}</FormControl.Static> </Col>
+        </FormGroup>
+
+        <FormGroup controlId="formParentsEmail">
+            <Col componentClass={ControlLabel} sm={2}>Parents Email</Col>
+            <Col sm={10}><FormControl.Static>{this.props.Records.idParentsEmail}</FormControl.Static> </Col>
+        </FormGroup>
+
+        <FormGroup controlId="formParentsAddress">
+            <Col componentClass={ControlLabel} sm={2}>Parents Address</Col>
+            <Col sm={10}><FormControl.Static>{this.props.Records.idAddress}</FormControl.Static> </Col>
+        </FormGroup>
+       
+      <FormGroup controlId="formParentsLanguage">
+            <Col componentClass={ControlLabel} sm={2}>Language</Col>
+            <Col sm={10}><FormControl.Static>{this.props.Records.idLanguage}
+           </FormControl.Static> </Col>
+        </FormGroup>
+        </Form>
+     )
+  }else{
+
   return ( 
       <Form horizontal>
          
           <FormGroup controlId="formPatientFirstName">
              <Col sm={2} componentClass={ControlLabel}>First Name</Col> 
-             <Col sm={10}><FormControl type="text" name="idFirstname" placeholder="Patient First Name" onChange={this.onInputChange}/> </Col>
+             <Col sm={10}><FormControl type="text" name="idFirstName" placeholder={this.props.Records.idFirstName} onChange={this.onInputChange}/> </Col>
           </FormGroup>
 
           <FormGroup controlId="formPatientLastName">
             <Col sm={2} componentClass={ControlLabel}> Last Name </Col>
-            <Col sm={10}><FormControl type="text" name = "idLastname" placeholder="Patient Last Name" onChange={this.onInputChange}/></Col>
+            <Col sm={10}><FormControl type="text" name = "idLastName" placeholder={this.props.Records.idLastName} onChange={this.onInputChange}/></Col>
           </FormGroup>
          
+          <FormGroup controlId="formPatientID">
+            <Col componentClass={ControlLabel} sm={2}> I.C. number  </Col>
+            <Col sm={10}><FormControl type="text" name = "idNumber" placeholder={this.props.Records.idNumber} onChange={this.onInputChange}/></Col>
+          </FormGroup>
+
           <FormGroup controlId="formPatientDOB">
             <Col componentClass={ControlLabel} sm={2}> D.O.B </Col>
-            <Col sm={10}><FormControl type="text" name = "idDOB" placeholder="Patient Date of Birth (yyyy-mm-dd)" onChange={this.onInputChange}/></Col>
+            <Col sm={10}><FormControl type="text" name = "idDOB" placeholder={this.props.Records.idDOB} onChange={this.onInputChange}/></Col>
           </FormGroup>
 
          <FormGroup controlId="formPatientSex">
@@ -55,27 +118,27 @@ class DemogView extends Component{
 
         <FormGroup controlId="formParentsName">
             <Col componentClass={ControlLabel} sm={2}>Parents Name</Col>
-            <Col sm={10}><FormControl type="text" name = "idParentsname" placeholder="Parents' Name" onChange={this.onInputChange}/> </Col>
+            <Col sm={10}><FormControl type="text" name = "idParentsName" placeholder={this.props.Records.ParentsName} onChange={this.onInputChange}/> </Col>
         </FormGroup>
         
        <FormGroup controlId="formParentsContact">
             <Col componentClass={ControlLabel} sm={2}>Parents Contact</Col>
-            <Col sm={10}><FormControl type="text" name = "idParentsContact" placeholder="Parents' Contact" onChange={this.onInputChange}/> </Col>
+            <Col sm={10}><FormControl type="text" name = "idParentsContact" placeholder={this.props.Records.ParentsContact} onChange={this.onInputChange}/> </Col>
         </FormGroup>
 
         <FormGroup controlId="formParentsEmail">
             <Col componentClass={ControlLabel} sm={2}>Parents Email</Col>
-            <Col sm={10}><FormControl type="email" name="idParentsEmail" placeholder="Parents' Email" onChange={this.onInputChange}/> </Col>
+            <Col sm={10}><FormControl type="email" name="idParentsEmail" placeholder={this.props.Records.ParentsEmail} onChange={this.onInputChange}/> </Col>
         </FormGroup>
 
         <FormGroup controlId="formParentsAddress">
             <Col componentClass={ControlLabel} sm={2}>Parents Address</Col>
-            <Col sm={10}><FormControl componentClass="textarea" name="idAddress" placeholder="Parents' Address" onChange={this.onInputChange}/> </Col>
+            <Col sm={10}><FormControl componentClass="textarea" name="idAddress" placeholder={this.props.Records.idAddress} onChange={this.onInputChange}/> </Col>
         </FormGroup>
        
       <FormGroup controlId="formParentsLanguage">
             <Col componentClass={ControlLabel} sm={2}>Language</Col>
-            <Col sm={10}><FormControl componentClass="select" name="idLanguage" placeholder="Click to Select" onChange={this.onInputChange}>
+            <Col sm={10}><FormControl componentClass="select" name="idLanguage" placeholder={this.props.Records.idLanguage} onChange={this.onInputChange}>
               <option value="English">English</option>
               <option value="Malay">Malay</option>
               <option value="Chinese">Chinese</option> 
@@ -85,11 +148,13 @@ class DemogView extends Component{
     </Form>
      
   )}
+  } 
 };
 
 
 DemogView.propTypes={
-    onTextChange: PropTypes.func.isRequired
+    onTextChange: PropTypes.func.isRequired,
+    isView: PropTypes.bool.isRequired
 }
 
 export default DemogView
