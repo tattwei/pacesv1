@@ -22240,17 +22240,23 @@ function storeReq() {
             });
 
         case 'SAVETODB_REQ':
-            return Object.assign({}, state, {
-                subjectid: action.subjectid,
-                records: action.records
-            });
+            return Object.assign({}, state, {});
 
         case 'SAVETODB_SUCCESS':
             return Object.assign({}, state, {
-                subjectid: action.subjectid
+                success: action.success,
+                message: action.message,
+                numrecords: action.numrecords,
+                records: action.records
             });
 
         case 'SAVETODB_FAILURE':
+            return Object.assign({}, state, {
+                success: action.success,
+                message: action.message,
+                numrecords: action.numrecords,
+                records: action.records
+            });
 
         case 'ADDTITLE':
             return Object.assign({}, state, {
@@ -22634,7 +22640,6 @@ function LOADFMDB_SUCCESS(filter, json) {
         message: json.message,
         numrecords: json.numrecords,
         records: json.records,
-        idFirstName: json.records[0].idFirstName,
         receivedAt: Date.now()
     };
 }
@@ -22650,24 +22655,36 @@ function LOADFMDB_FAILURE(filter, json) {
     };
 }
 
-function SAVETODB_REQ(transaction) {
+function SAVETODB_REQ(filter) {
     return {
         type: 'SAVETODB_REQ',
-        records: transaction,
-        subjectid: transaction.subjectid
+        filter: filter,
+        numrecords: 0
     };
 }
 
-function SAVETODB_SUCCESS(subjectid, json) {
-    console.log("SAVE RESP", json);
+function SAVETODB_SUCCESS(transaction, json) {
+    //console.log("SAVE RESP", json)
     return {
         type: 'SAVETODB_SUCCESS',
-        subjectid: subjectid,
+        success: json.success,
+        message: json.message,
+        numrecords: json.numrecords,
+        records: [json.records],
         receivedAt: Date.now()
     };
 }
 
-function SAVETODB_FAILURE() {}
+function SAVETODB_FAILURE(transaction, json) {
+    return {
+        type: 'SAVETODB_SUCCESS',
+        success: json.success,
+        message: json.message,
+        numrecords: json.numrecords,
+        records: [transaction],
+        receivedAt: Date.now()
+    };
+}
 
 // Thunk action creator - returns functions rather than objects
 
@@ -22681,21 +22698,28 @@ function assembleHeader(token) {
 
 function SaveDB(transaction, token) {
     var uri = 'https://182.54.217.24:8080/user/' + transaction.idNumber;
-    console.log("SAVE ", uri);
     //const postbody = `subjectid=${transaction.subjectid}&record1=${transaction.records}`
-    var postbody = 'record=${transaction}';
+
+    var postbody = 'idFirstName=' + transaction.idFirstName + '&idLastName=' + transaction.idLastName + '&idNumber=' + transaction.idNumber + '&idDOB=' + transaction.idDOB + '&idSex=' + transaction.idSex + '&idParentsName=' + transaction.idParentsName + '&idParentsContact=' + transaction.idParentsContact + '&idParentsEmail=' + transaction.idParentsEmail + '&idAddress=' + transaction.idAddress + '&idLanguage=' + transaction.idLanguage + '&clinDiag1=' + transaction.clinDiag1 + '&clinDiag2=' + transaction.clinDiag2 + '&clinDiag3=' + transaction.clinDiag3 + '&clinIsEpilepsy=' + transaction.clinIsEpilepsy;
+
+    //const postbody = `record=${record}`
     console.log("POST BODY", postbody);
 
     var header = assembleHeader(token);
     return function (dispatch) {
-        dispatch(SAVETODB_REQ(transaction));
+        dispatch(SAVETODB_REQ(postbody));
 
         return (0, _isomorphicFetch2.default)(uri, { method: 'post',
             headers: header,
             body: postbody }).then(function (response) {
             return response.json();
         }).then(function (json) {
-            return dispatch(SAVETODB_SUCCESS(transaction, json));
+            console.log("SaveDB Req Successful?", json.success);
+            if (json.success) {
+                dispatch(SAVETODB_SUCCESS(postbody, json));
+            } else {
+                dispatch(SAVETODB_FAILURE(postbody, json));
+            }
         });
     };
 }
@@ -22716,7 +22740,7 @@ function LoadDB(transaction, token) {
         }).then(function (response) {
             return response.json();
         }).then(function (json) {
-            console.log("Req Successful? ", json.success);
+            console.log("LoadDB Req Successful? ", json.success);
 
             if (json.success) {
                 dispatch(LOADFMDB_SUCCESS(filter, json));
@@ -23340,7 +23364,7 @@ var DemogView = function (_Component) {
                         _react2.default.createElement(
                             _reactBootstrap.Col,
                             { sm: 10 },
-                            _react2.default.createElement(_reactBootstrap.FormControl, { type: 'text', name: 'idParentsName', placeholder: this.props.Records.ParentsName, onChange: this.onInputChange }),
+                            _react2.default.createElement(_reactBootstrap.FormControl, { type: 'text', name: 'idParentsName', placeholder: this.props.Records.idParentsName, onChange: this.onInputChange }),
                             ' '
                         )
                     ),
@@ -23355,7 +23379,7 @@ var DemogView = function (_Component) {
                         _react2.default.createElement(
                             _reactBootstrap.Col,
                             { sm: 10 },
-                            _react2.default.createElement(_reactBootstrap.FormControl, { type: 'text', name: 'idParentsContact', placeholder: this.props.Records.ParentsContact, onChange: this.onInputChange }),
+                            _react2.default.createElement(_reactBootstrap.FormControl, { type: 'text', name: 'idParentsContact', placeholder: this.props.Records.idParentsContact, onChange: this.onInputChange }),
                             ' '
                         )
                     ),
@@ -23370,7 +23394,7 @@ var DemogView = function (_Component) {
                         _react2.default.createElement(
                             _reactBootstrap.Col,
                             { sm: 10 },
-                            _react2.default.createElement(_reactBootstrap.FormControl, { type: 'email', name: 'idParentsEmail', placeholder: this.props.Records.ParentsEmail, onChange: this.onInputChange }),
+                            _react2.default.createElement(_reactBootstrap.FormControl, { type: 'email', name: 'idParentsEmail', placeholder: this.props.Records.idParentsEmail, onChange: this.onInputChange }),
                             ' '
                         )
                     ),
@@ -23702,21 +23726,22 @@ var SecureView = function (_Component) {
         this.setState({ isView: false });
       } else {
         this.props.onSaveDB(this.state, this.props.token);
-        this.setState({ dorender: true });
+        this.setState({ dorender: true, isView: false });
       }
     }
   }, {
     key: 'onResetClick',
     value: function onResetClick(event) {
       this.props.onReset();
-      this.setState({ dorender: true, idNumber: "" });
+      this.setState({ dorender: true, idNumber: "", isView: false });
     }
   }, {
     key: 'onLogoutClick',
     value: function onLogoutClick(event) {
       this.props.onReset();
       this.props.onAuthenticate("", ""); // blank username and pasword
-      this.setState(idNumber);
+      this.setState(this.props);
+      this.setState({ idNumber: "", isView: false });
     }
   }, {
     key: 'componentDidUpdate',

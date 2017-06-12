@@ -72,7 +72,6 @@ export function LOADFMDB_SUCCESS(filter, json){
         message: json.message,
         numrecords: json.numrecords,
         records: json.records,
-        idFirstName: json.records[0].idFirstName,
         receivedAt: Date.now()
     }
 }
@@ -88,24 +87,35 @@ export function LOADFMDB_FAILURE(filter,json){
     }
 }
 
-export function SAVETODB_REQ(transaction){
+export function SAVETODB_REQ(filter){
     return{
         type: 'SAVETODB_REQ',
-        records: transaction,
-        subjectid: transaction.subjectid
+        filter: filter,
+        numrecords: 0
     }
 }
 
-export function SAVETODB_SUCCESS(subjectid, json){
-   console.log("SAVE RESP", json)
+export function SAVETODB_SUCCESS(transaction, json){
+   //console.log("SAVE RESP", json)
     return{
         type: 'SAVETODB_SUCCESS',
-        subjectid: subjectid,
+        success: json.success,
+        message: json.message,
+        numrecords: json.numrecords,
+        records: [json.records],
         receivedAt: Date.now()
     }
 }
 
-export function SAVETODB_FAILURE(){
+export function SAVETODB_FAILURE(transaction, json){
+    return{
+        type: 'SAVETODB_SUCCESS',
+        success: json.success,
+        message: json.message,
+        numrecords: json.numrecords,
+        records: [transaction],
+        receivedAt: Date.now()
+    }
 }
 
 
@@ -124,20 +134,30 @@ function assembleHeader(token){
 
 export function SaveDB(transaction, token){
    const uri = `https://182.54.217.24:8080/user/${transaction.idNumber}`
-   console.log("SAVE ",uri)
    //const postbody = `subjectid=${transaction.subjectid}&record1=${transaction.records}`
-   const postbody = 'record=${transaction}'
+   
+   const postbody = 
+       `idFirstName=${transaction.idFirstName}&idLastName=${transaction.idLastName}&idNumber=${transaction.idNumber}&idDOB=${transaction.idDOB}&idSex=${transaction.idSex}&idParentsName=${transaction.idParentsName}&idParentsContact=${transaction.idParentsContact}&idParentsEmail=${transaction.idParentsEmail}&idAddress=${transaction.idAddress}&idLanguage=${transaction.idLanguage}&clinDiag1=${transaction.clinDiag1}&clinDiag2=${transaction.clinDiag2}&clinDiag3=${transaction.clinDiag3}&clinIsEpilepsy=${transaction.clinIsEpilepsy}`
+
+   //const postbody = `record=${record}`
    console.log("POST BODY", postbody)
 
    let header = assembleHeader(token)
    return function (dispatch){
-        dispatch(SAVETODB_REQ(transaction))
+        dispatch(SAVETODB_REQ(postbody))
 
         return fetch(uri, {method:'post',
                            headers: header,
                            body:postbody})
                .then(response=>response.json())
-               .then((json)=>dispatch(SAVETODB_SUCCESS(transaction, json))) 
+               .then((json)=>{
+                     console.log("SaveDB Req Successful?", json.success)
+                     if(json.success){
+                         dispatch(SAVETODB_SUCCESS(postbody, json))
+                     }else{
+                         dispatch(SAVETODB_FAILURE(postbody,json))
+                     } 
+               })
    }
 
 }
@@ -158,7 +178,7 @@ export function LoadDB(transaction, token){
 			   })
 		.then(response=>response.json())
 		.then((json)=>{
-                   console.log("Req Successful? ",json.success)
+                   console.log("LoadDB Req Successful? ",json.success)
 
                     if (json.success){
                         dispatch(LOADFMDB_SUCCESS(filter, json))

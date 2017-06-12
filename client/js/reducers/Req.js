@@ -38,17 +38,23 @@ export function storeReq(state={}, action){
 
         case 'SAVETODB_REQ':
             return Object.assign({}, state, {
-                subjectid: action.subjectid,
-                records: action.records
             })
 
         case 'SAVETODB_SUCCESS':
              return Object.assign({}, state,{
-                 subjectid: action.subjectid
+                   success: action.success,
+                   message: action.message,
+                   numrecords: action.numrecords,
+                   records: action.records
              })
 
         case 'SAVETODB_FAILURE':
-
+             return Object.assign({}, state,{
+                   success: action.success,
+                   message: action.message,
+                   numrecords: action.numrecords,
+                   records: action.records
+             })
 
         case 'ADDTITLE':
             return Object.assign({}, state, {

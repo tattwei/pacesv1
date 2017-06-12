@@ -33,12 +33,15 @@ module.exports={
    save(req,res){
         //var subjectid = req.body.subjectid
         console.log('In SERVER', req.body);
-        //var mydoc = Models.Testdata (req.body);
-        //mydoc.save((err,result)=> {
-        //    res.json(result)
-        //});
-        Models.DBreq.create(req.body, (err,result)=>{
-             res.json(result)
+        const myrecord = req.body
+        Models.DBreq.create(myrecord, (err,result)=>{
+
+            if(err){
+                res.json({success: false, message: err, numrecords:0, records:myrecord})
+            }else{
+                res.json({success:true, message: "Saved OK", numrecords:1, records: myrecord})
+            }
+           
         })
    },
 
@@ -48,12 +51,17 @@ module.exports={
        console.log("DB Search filter is ",req.params)
 	Models.DBreq.find(req.params, (err,record)=>{
 
+            if(err){
+               res.json({success: false, message: err, numrecords: 0, records: []})
+            } else{
+
             console.log("DB found record(s) ", record)
             if(record.length==0){
                res.json({ success: false, message: "No records found", numrecords: 0 })
 
             }else{
                res.json({success: true, message: "OK", numrecords: record.length, records: record})
+            }
             }
             
 	})

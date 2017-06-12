@@ -56,19 +56,20 @@ class SecureView extends Component{
           this.setState({isView: false})
       }else{
       this.props.onSaveDB(this.state, this.props.token)
-      this.setState({ dorender:true})
+      this.setState({ dorender:true, isView: false})
       }
   }
 
   onResetClick(event){
     this.props.onReset()
-    this.setState({dorender: true, idNumber: ""})
+    this.setState({dorender: true, idNumber: "", isView:false})
   }
 
   onLogoutClick(event){
        this.props.onReset()
        this.props.onAuthenticate("","")  // blank username and pasword
-       this.setState(idNumber:"")
+       this.setState(this.props)
+       this.setState({idNumber:"", isView:false})
   }
 
   componentDidUpdate(prevProps, prevState){
